@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConEditor", "ConEditor\ConEditor.csproj", "{DE189AF6-160E-4A65-A9DF-6C8A05B67357}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Azuki.coneditor", "Azuki\Azuki\Azuki.coneditor.csproj", "{9910474A-AA51-4DFF-8499-CB661216B200}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE189AF6-160E-4A65-A9DF-6C8A05B67357}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE189AF6-160E-4A65-A9DF-6C8A05B67357}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE189AF6-160E-4A65-A9DF-6C8A05B67357}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE189AF6-160E-4A65-A9DF-6C8A05B67357}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9910474A-AA51-4DFF-8499-CB661216B200}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9910474A-AA51-4DFF-8499-CB661216B200}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9910474A-AA51-4DFF-8499-CB661216B200}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9910474A-AA51-4DFF-8499-CB661216B200}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
