@@ -518,7 +518,7 @@ namespace Sgry.Azuki
 				}
 
 				// replace selection to input char
-				doc.Replace( input.ToString(), selBegin, selEnd );
+                if (doc.Replace(input.ToString(), selBegin, selEnd) == false) return;
 				doc.SetSelection( newCaretIndex, newCaretIndex );
 
 				// set desired column
@@ -697,34 +697,93 @@ namespace Sgry.Azuki
 		/// joined with specified string.
 		/// </para>
 		/// </remarks>
-		public string GetSelectedText( string separator )
-		{
+        public string GetSelectedText(string separator)
+        {
 			Debug.Assert( _IsDisposed == false );
 
-			if( Document.RectSelectRanges != null )
-			{
-				StringBuilder text = new StringBuilder();
+            Debug.Assert(_IsDisposed == false);
 
-				// get text in the rect
-				for( int i=0; i<Document.RectSelectRanges.Length; i+=2 )
-				{
-					// get this row content
-					string row = Document.GetTextInRange(
-							Document.RectSelectRanges[i],
-							Document.RectSelectRanges[i+1]
-						);
-					text.Append( row + separator );
-				}
+            if (Document.RectSelectRanges != null)
+            {
+                StringBuilder text = new StringBuilder();
 
-				return text.ToString();
-			}
-			else
-			{
-				int begin, end;
-				Document.GetSelection( out begin, out end );
-				return Document.GetTextInRange( begin, end );
-			}
-		}
+                // get text in the rect
+                for (int i = 0; i < Document.RectSelectRanges.Length; i += 2)
+                {
+                    // get this row content
+                    string row = Document.GetTextInRange(
+                            Document.RectSelectRanges[i],
+                            Document.RectSelectRanges[i + 1]
+                        );
+                    text.Append(row + separator);
+                }
+
+                return text.ToString();
+            }
+            else
+            {
+                int begin, end;
+                Document.GetSelection(out begin, out end);
+
+                if (GetSelectTextFilter == null)
+                {
+                    return Document.GetTextInRange(begin, end);
+                }
+                else
+                {
+                    return _GetSelectedTextWithFiter(begin, end);
+                }
+            }
+        }
+
+        private string _GetSelectedTextWithFiter(int begin, int end)
+        {
+            int lineBegin = Document.GetLineIndexFromCharIndex(begin);
+            int lineEnd = Document.GetLineIndexFromCharIndex(end - 1);
+
+            //1行だけの時
+            if (lineBegin == lineEnd)
+            {
+                if (GetSelectTextFilter(lineBegin) == true)
+                {
+                    return Document.GetTextInRange(begin, end);
+                }
+                return "";
+            }
+            //2行以上の時
+            else
+            {
+                string ret = "";
+                //最初の行（beginから行末まで)
+                if (GetSelectTextFilter(lineBegin) == true)
+                {
+                    ret += Document.GetTextInRange(begin, Document.GetLineEndIndexFromCharIndex(begin));
+                }
+                //途中の行（全部）
+                for (int i = lineBegin + 1; i <= lineEnd - 1; i++)
+                {
+                    if (GetSelectTextFilter(i) == true)
+                    {
+                        ret += Document.GetLineContentWithEolCode(i);
+                    }
+                }
+                //最後の行（endまで）
+                if (GetSelectTextFilter(lineEnd) == true)
+                {
+                    ret += Document.GetTextInRange(Document.GetLineHeadIndex(lineEnd), end);
+                }
+                Console.WriteLine(ret);
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// return true for "ENABLE" select specified line no.
+        /// </summary>
+        /// <param name="lineNo"></param>
+        /// <returns></returns>
+        public GetSelectTextFilterProc GetSelectTextFilter;
+
 		#endregion
 
 		#region UI Event
@@ -834,19 +893,21 @@ namespace Sgry.Azuki
 				// remove current selection
 				Document.GetSelection( out begin, out end );
 				selText = Document.GetTextInRange( begin, end );
-				Document.Replace( "" );
-				if( end <= targetIndex )
-					targetIndex -= selText.Length;
-				else if( begin <= targetIndex )
-					targetIndex = begin;
-				/*NO_NEED//
-				else
-					targetIndex = targetIndex;
-				*/
+                if (Document.Replace("") == true)
+                {
+                    if (end <= targetIndex)
+                        targetIndex -= selText.Length;
+                    else if (begin <= targetIndex)
+                        targetIndex = begin;
+                    /*NO_NEED//
+                    else
+                        targetIndex = targetIndex;
+                    */
 
-				// insert new text
-				Document.Replace( selText, targetIndex, targetIndex );
-				Document.SetSelection( targetIndex, targetIndex + selText.Length );
+                    // insert new text
+                    Document.Replace(selText, targetIndex, targetIndex);
+                    Document.SetSelection(targetIndex, targetIndex + selText.Length);
+                }
 			}
 			finally
 			{

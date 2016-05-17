@@ -229,6 +229,20 @@ namespace Sgry.Azuki
 			}
 		}
 
+        protected string _lineNumberWidthPad;
+        public string LineNumberWidthPad
+        {
+            get
+            {
+                return string.IsNullOrEmpty(_lineNumberWidthPad) ? "" : _lineNumberWidthPad;
+            }
+            set
+            {
+                _lineNumberWidthPad = value;
+                UpdateMetrics(_UI.GetIGraphics());
+            }
+        }
+
 		protected void UpdateMetrics( IGraphics g )
 		{
 			StringBuilder buf = new StringBuilder( 32 );
@@ -251,7 +265,7 @@ namespace Sgry.Azuki
 				_LastUsedLineNumberSample = Document.ViewParam.MaxLineNumber;
 			}
 			_LineNumAreaWidth
-				= g.MeasureText( _LastUsedLineNumberSample.ToString() ).Width + _SpaceWidth;
+				= g.MeasureText( _LastUsedLineNumberSample.ToString() + LineNumberWidthPad).Width + _SpaceWidth;
 			_DirtBarWidth = Math.Max( 3, _SpaceWidth >> 1 );
 
 			// update metrics related with horizontal ruler

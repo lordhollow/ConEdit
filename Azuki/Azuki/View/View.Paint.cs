@@ -441,6 +441,10 @@ namespace Sgry.Azuki
 			g.FillRectangle( XofDirtBar, lineTopY, DirtBarWidth, LineSpacing );
 		}
 
+        #region Extend for conedit
+        public ActualLineNumberConverter ActualLineNumberConverter { get; set; }
+        #endregion
+
 		/// <summary>
 		/// Draws line number area at specified line.
 		/// </summary>
@@ -480,7 +484,14 @@ namespace Sgry.Azuki
 				Point textPos;
 
 				// calculate text position
-				lineNumText = lineNumber.ToString();
+                if (ActualLineNumberConverter != null)
+                {
+                    lineNumText = ActualLineNumberConverter(lineNumber);
+                }
+                else
+                {
+                    lineNumText = lineNumber.ToString();
+                }
 				pos.X = XofDirtBar - g.MeasureText( lineNumText ).Width - LineNumberAreaPadding;
 				textPos = pos;
 				textPos.Y += (LinePadding >> 1);

@@ -728,6 +728,8 @@ namespace Sgry.Azuki
 		/// </remarks>
 		string GetSelectedText( string separator );
 
+        GetSelectTextFilterProc GetSelectTextFilter { get; set; }
+ 
 		/// <summary>
 		/// Gets length of the specified line.
 		/// </summary>
@@ -1031,4 +1033,7 @@ namespace Sgry.Azuki
 		}
 		#endregion
 	}
+
+
+    public delegate bool GetSelectTextFilterProc(int lineNo);
 }

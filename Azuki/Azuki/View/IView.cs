@@ -735,5 +735,12 @@ namespace Sgry.Azuki
 			get;
 		}
 		#endregion
-	}
+
+        #region Extend for conedit
+        ActualLineNumberConverter ActualLineNumberConverter { get; set; }
+        string LineNumberWidthPad { get; set; }
+        #endregion
+    }
+
+    public delegate string ActualLineNumberConverter(int logicalLineOfDoc);
 }

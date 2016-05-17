@@ -1715,6 +1715,12 @@ namespace Sgry.Azuki.WinForms
 			return _Impl.GetSelectedText( separator );
 		}
 
+        public GetSelectTextFilterProc GetSelectTextFilter
+        {
+            get { return _Impl.GetSelectTextFilter; }
+            set { _Impl.GetSelectTextFilter = value; }
+        }
+
 		/// <summary>
 		/// Gets length of the specified line.
 		/// </summary>

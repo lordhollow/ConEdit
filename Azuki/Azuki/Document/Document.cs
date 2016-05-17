@@ -920,13 +920,13 @@ namespace Sgry.Azuki
 		/// Replaces current selection.
 		/// </summary>
 		/// <exception cref="ArgumentNullException">Parameter text is null.</exception>
-		public void Replace( string text )
+		public bool Replace( string text )
 		{
 			int begin, end;
 
 			GetSelection( out begin, out end );
 
-			Replace( text, begin, end );
+			return Replace( text, begin, end );
 		}
 
 		/// <summary>
@@ -937,7 +937,7 @@ namespace Sgry.Azuki
 		/// <param name="end">end index of the range to be replaced</param>
 		/// <exception cref="ArgumentNullException">Parameter text is null.</exception>
 		/// <exception cref="ArgumentOutOfRangeException">Specified index is out of valid range.</exception>
-		public void Replace( string text, int begin, int end )
+		public bool Replace( string text, int begin, int end )
 		{
 			Debug.Assert( _LHI.Count == _LDS.Count, "LHI.Count("+_LHI.Count+") is not LDS.Count("+_LDS.Count+")" );
 			if( begin < 0 || _Buffer.Count < begin )
@@ -958,7 +958,7 @@ namespace Sgry.Azuki
 
 			// Do nothing if the operation has no effect
 			if( text == "" && begin == end )
-				return;
+				return true;
 
 			// first of all, remember current dirty state of the lines
 			// which will be modified by this replacement
@@ -999,6 +999,12 @@ namespace Sgry.Azuki
 				_Buffer.CopyTo( begin, end, oldChars );
 				oldText = new String( oldChars );
 			}
+
+            //confirm replace(before_content_change event)
+            if (InvokeBeforeContentChange(begin, oldText, text) == false)
+            {
+                return false;
+            }
 
 			// keep copy of old caret/anchor index
 			oldAnchor = newAnchor = AnchorIndex;
@@ -1081,6 +1087,7 @@ namespace Sgry.Azuki
 			}
 			InvokeContentChanged( begin, oldText, text );
 			InvokeSelectionChanged( oldAnchor, oldCaret, null, true );
+            return true;
 		}
 		#endregion
 
@@ -2582,6 +2589,26 @@ namespace Sgry.Azuki
 				ContentChanged( this, new ContentChangedEventArgs(index, oldText, newText) );
 		}
 
+        public event BeforeContentChangeEventHandler BeforeContentChange;
+        bool InvokeBeforeContentChange( int index, string oldText, string newText )
+		{
+			Debug.Assert( 0 <= index );
+			Debug.Assert( oldText != null );
+			Debug.Assert( newText != null );
+
+            if (BeforeContentChange != null)
+            {
+                var arg = new BeforeContentChangeEventArgs(index, oldText, newText);
+                arg.Cancel = false;
+                BeforeContentChange(this, arg);
+                if (arg.Cancel == true)
+                {
+                    return false;
+                }
+            }
+            return true;
+		}
+
 		/// <summary>
 		/// Occurs when IsDirty property has changed.
 		/// </summary>
@@ -3099,6 +3126,7 @@ namespace Sgry.Azuki
 	/// Event handler for ContentChanged event.
 	/// </summary>
 	public delegate void ContentChangedEventHandler( object sender, ContentChangedEventArgs e );
+	public delegate void BeforeContentChangeEventHandler( object sender, BeforeContentChangeEventArgs e );
 
 	/// <summary>
 	/// Event information about content change.
@@ -3161,5 +3189,14 @@ namespace Sgry.Azuki
 			set{ _RedrawEndIndex = value; }
 		}
 	}
+
+    public class BeforeContentChangeEventArgs : ContentChangedEventArgs
+    {
+        public BeforeContentChangeEventArgs(int index, string oldText, string newText)
+            : base(index, oldText, newText)
+        {
+        }
+        public bool Cancel{get;set;}
+    }
 	#endregion
 }

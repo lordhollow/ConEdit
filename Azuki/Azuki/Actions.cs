@@ -461,7 +461,11 @@ namespace Sgry.Azuki
 			{
 				//--- case of normal selection ---
 				// delete selected text
-				doc.Replace( "" );
+                if (doc.Replace("") == false)
+                {
+                    doc.EndUndo();
+                    return;
+                }
 			}
 
 			// paste according type of the text data
