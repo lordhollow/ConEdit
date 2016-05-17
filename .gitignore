@@ -1,0 +1,5 @@
+/Azuki/Azuki/obj
+/Azuki/package/*.dll
+/Azuki/package/*.pdb
+/bin
+*.suo
