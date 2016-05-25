@@ -56,6 +56,12 @@ namespace ConEditor
         [XmlElement("lineNo")]
         [DefaultValue(LineNoMethod.Individual)]
         public LineNoMethod LineNoMethod { get; set; }
+
+        /// <summary>
+        /// git.exeの場所
+        /// </summary>
+        [XmlElement("git")]
+        public string GitPath { get; set; }
     }
 
     /// <summary>

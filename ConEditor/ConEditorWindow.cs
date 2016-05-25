@@ -185,7 +185,13 @@ namespace ConEditor
         {
             if (binder == null) return;
             var f = new GitInitDialog(binder.Path);
+            f.GitPath = config.GitPath;
             f.ShowDialog();
+            if (f.GitPath != config.GitPath)
+            {
+                config.GitPath = f.GitPath;
+                ConfigulationLoader.Save(ConfigulationLoader.GlobalConfigPath, config);
+            }
         }
 
         /// <summary>
