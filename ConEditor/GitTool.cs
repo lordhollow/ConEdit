@@ -45,6 +45,11 @@ namespace ConEditor
         }
 
         /// <summary>
+        /// 最後の実行結果
+        /// </summary>
+        public string LastExecuteResult { get; private set; }
+
+        /// <summary>
         /// リポジトリの作成（ないとき）と、ユーザー名/メールアドレス/自動改行変換の設定
         /// </summary>
         /// <param name="workspace"></param>
@@ -57,9 +62,11 @@ namespace ConEditor
             {
                 GitExecute(workspace, "init");
             }
-            GitExecute(workspace, "config --local user.name \"" + name + "\"");
-            GitExecute(workspace, "config --local user.email \"" + mail + "\"");
-            GitExecute(workspace, "config --local core.autocrlf false");   //改行コード変換をなくす
+            var ret = GitExecute(workspace, "config --local user.name \"" + name + "\"");
+            ret += GitExecute(workspace, "config --local user.email \"" + mail + "\"");
+            ret += GitExecute(workspace, "config --local core.autocrlf false");   //改行コード変換をなくす
+
+            LastExecuteResult = ret;
         }
 
         /// <summary>
@@ -102,10 +109,10 @@ namespace ConEditor
         {
         }
 
-        private void GitExecute(string workspace, string cmd)
+        private string GitExecute(string workspace, string cmd)
         {
             var ps = new ProcessStartInfo();
-            ps.FileName = Path.Combine(GitPath, "git.exe");
+            ps.FileName = GitPath;
             ps.WorkingDirectory = workspace;
             ps.CreateNoWindow = true;
             ps.UseShellExecute = false;
@@ -121,6 +128,8 @@ namespace ConEditor
             {
                 GitExcuted(this, new GitExecutedEventArgs(px));
             }
+
+            return px;
         }
 
         public EventHandler<GitExecutedEventArgs> GitExcuted;

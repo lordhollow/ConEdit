@@ -103,6 +103,7 @@
             this.lblGitPos.Size = new System.Drawing.Size(296, 12);
             this.lblGitPos.TabIndex = 6;
             this.lblGitPos.Text = "label4";
+            this.lblGitPos.TextChanged += new System.EventHandler(this.lblGitPos_TextChanged);
             // 
             // btnFindGit
             // 

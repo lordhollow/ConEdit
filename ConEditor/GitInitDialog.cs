@@ -13,11 +13,18 @@ namespace ConEditor
     {
         private string workspace;
 
+
+        public string GitPath
+        {
+            get { return lblGitPos.Text; }
+            set { lblGitPos.Text = value; }
+        }
+
         public GitInitDialog(string workspace)
         {
-            this.workspace = workspace;
 
             InitializeComponent();
+            this.workspace = workspace;
             lblGitPos.Text = GitTool.Instance.GitPath;
             if (string.IsNullOrEmpty(GitTool.Instance.GitPath))
             {
@@ -41,7 +48,19 @@ namespace ConEditor
 
         private void btnInit_Click(object sender, EventArgs e)
         {
+            var tool = GitTool.Instance;
+            tool.GitPath = lblGitPos.Text;
+            tool.Initialize(
+                workspace,
+                txtName.Text == "" ? "no name" : txtName.Text,
+                txtMail.Text);
+        }
 
+        private void lblGitPos_TextChanged(object sender, EventArgs e)
+        {
+            var tool = GitTool.Instance;
+            tool.GitPath = lblGitPos.Text;
+            btnInit.Enabled = tool.Enable;
         }
     }
 }
