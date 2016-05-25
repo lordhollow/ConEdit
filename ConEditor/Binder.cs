@@ -388,14 +388,34 @@ namespace ConEditor
         /// <returns></returns>
         public bool isTextIncludeBinderBorder(int index, string text)
         {
+            if (text == null) text = "";
+            return IsRangeContainsBindrBorder(index, index + text.Length);
+        }
+
+        /// <summary>
+        /// indexからindexToまでの範囲が境界を含むか確認する
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="indexTo"></param>
+        /// <returns></returns>
+        public bool IsRangeContainsBindrBorder(int index, int indexTo)
+        {
             //内容がないときは常に境界の上とする
             if (contents.Count == 0) return true;
             //再構築中は境界に乗らない
             if (Reconstructing) return false;
 
+            if (index > indexTo)
+            {
+                //swap
+                var t = index;
+                index = indexTo;
+                indexTo = t;
+            }
+
             //境界チェック...
             var lineBegin = Document.GetLineIndexFromCharIndex(index) + 1;
-            var lineEnd = Document.GetLineIndexFromCharIndex(index + text.Length) + 1;
+            var lineEnd = Document.GetLineIndexFromCharIndex(indexTo) + 1;
             foreach (var content in contents)
             {
                 if ((content.LogicalStartLineInDocumnet >= lineBegin) &&
