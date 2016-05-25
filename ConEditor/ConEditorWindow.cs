@@ -60,6 +60,7 @@ namespace ConEditor
             }
             config = conf;
             ApplyConfigulation();
+            azText.ColorScheme = AzukiMarkerForConEdit.ColorScheme;
 
             //hook to document(binder.Loadで新しいドキュメントになるのでその時には再フックが必要
             azText.Document.BeforeContentChange += doc_BeforeContentChange;

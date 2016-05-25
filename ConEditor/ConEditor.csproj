@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="ActualLineNumberConverterProvider.cs" />
     <Compile Include="AutoNumberingEngine.cs" />
+    <Compile Include="AzukiMarkerForConEdit.cs" />
     <Compile Include="BinderConfigulation.cs" />
     <Compile Include="BinderContent.cs" />
     <Compile Include="Binder.cs" />

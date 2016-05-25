@@ -96,6 +96,7 @@ namespace ConEditor
                 var fbody = String.Format("《{0}》\r\n{1}", file, content);
                 doc.Replace(fbody, doc.Length, doc.Length);
                 binder.Add(c);
+                markBinderBorder(doc, c);
             }
             doc.ClearHistory();
             doc.IsReadOnly = true;
@@ -245,6 +246,9 @@ namespace ConEditor
                     c.Index = binder.Count;
                     binder.Add(c);
 
+                    //mark
+                    markBinderBorder(doc, c);
+
                 }
                 doc.ClearHistory();
                 Document = doc;
@@ -260,6 +264,13 @@ namespace ConEditor
                 return false;
             }
             return true;
+        }
+
+        private static void markBinderBorder(Sgry.Azuki.Document doc, BinderContent c)
+        {
+            var head = doc.GetLineHeadIndex(c.LogicalStartLineInDocumnet - 1);
+            var end = doc.GetLineEndIndexFromCharIndex(head);
+            doc.Mark(head, end, AzukiMarkerForConEdit.ID_BindingBorder);
         }
 
         /// <summary>
@@ -327,6 +338,7 @@ namespace ConEditor
                 //挿入(document)
                 var fbody = String.Format("《{0}》\r\n\r\n", newPath);
                 Document.Replace(fbody, insertCharet, insertCharet);
+                markBinderBorder(Document, newContent);
 
                 //イベント
                 newContent.Save();

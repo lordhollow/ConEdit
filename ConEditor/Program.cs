@@ -16,6 +16,8 @@ namespace ConEditor
 #if DEBUG
             BinderContentOrder.Test();
 #endif
+            AzukiMarkerForConEdit.Registor();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new ConEditorWindow());
