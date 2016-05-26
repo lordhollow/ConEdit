@@ -219,7 +219,10 @@ namespace ConEditor
                     var c = new BinderContent();
                     c.Filename = file;
                     c.LogicalStartLineInDocumnet = doc.LineCount;
-                    var fbody = File.ReadAllText(file);
+                    var fdata = File.ReadAllBytes(file);
+                    c.Encoding = CodePageDetector.DetectEncoding(fdata);
+                    var fbody = c.Encoding.GetString(fdata);
+                    c.ActualFileSize = fdata.Length;
                     c.Content = fbody;
                     c.Dirty = false;
 

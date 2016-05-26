@@ -67,6 +67,7 @@
     <Compile Include="Binder.cs" />
     <Compile Include="BinderContentListViewItem.cs" />
     <Compile Include="BinderContentOrder.cs" />
+    <Compile Include="CodePageDetector.cs" />
     <Compile Include="ConEditorWindow.cs">
       <SubType>Form</SubType>
     </Compile>

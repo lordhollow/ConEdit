@@ -50,6 +50,16 @@ namespace ConEditor
         public bool Dirty { get; set; }
 
         /// <summary>
+        /// 保存時の文字コード
+        /// </summary>
+        public Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// ファイルサイズ（保存まで変わらない）
+        /// </summary>
+        public int ActualFileSize { get; set; }
+
+        /// <summary>
         /// 保存する
         /// </summary>
         public bool Save()
