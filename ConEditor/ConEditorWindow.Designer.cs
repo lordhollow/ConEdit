@@ -29,13 +29,16 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Sgry.Azuki.FontInfo fontInfo2 = new Sgry.Azuki.FontInfo();
+            Sgry.Azuki.FontInfo fontInfo1 = new Sgry.Azuki.FontInfo();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSaveall = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileInsert = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuFileGit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileGitConfig = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,9 +55,8 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblSelectionInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFileAdd = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileInsert = new System.Windows.Forms.ToolStripMenuItem();
+            this.chEncoding = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chActualFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mnuStrip.SuspendLayout();
             this.spLR.Panel1.SuspendLayout();
             this.spLR.Panel2.SuspendLayout();
@@ -74,7 +76,7 @@
             this.mnuSetting});
             this.mnuStrip.Location = new System.Drawing.Point(0, 0);
             this.mnuStrip.Name = "mnuStrip";
-            this.mnuStrip.Size = new System.Drawing.Size(700, 26);
+            this.mnuStrip.Size = new System.Drawing.Size(700, 24);
             this.mnuStrip.TabIndex = 1;
             this.mnuStrip.Text = "menuStrip1";
             // 
@@ -90,14 +92,14 @@
             this.toolStripMenuItem1,
             this.mnuFileGit});
             this.mnuFile.Name = "mnuFile";
-            this.mnuFile.Size = new System.Drawing.Size(85, 22);
+            this.mnuFile.Size = new System.Drawing.Size(66, 20);
             this.mnuFile.Text = "ファイル(&F)";
             // 
             // mnuFileOpen
             // 
             this.mnuFileOpen.Name = "mnuFileOpen";
             this.mnuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuFileOpen.Size = new System.Drawing.Size(268, 22);
+            this.mnuFileOpen.Size = new System.Drawing.Size(232, 22);
             this.mnuFileOpen.Text = "開く(&O)";
             this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
@@ -105,7 +107,7 @@
             // 
             this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuFileSave.Size = new System.Drawing.Size(268, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(232, 22);
             this.mnuFileSave.Text = "保存(&S)";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
@@ -114,14 +116,33 @@
             this.mnuFileSaveall.Name = "mnuFileSaveall";
             this.mnuFileSaveall.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-            this.mnuFileSaveall.Size = new System.Drawing.Size(268, 22);
+            this.mnuFileSaveall.Size = new System.Drawing.Size(232, 22);
             this.mnuFileSaveall.Text = "すべて保存(&A)";
             this.mnuFileSaveall.Click += new System.EventHandler(this.mnuFileSaveall_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(229, 6);
+            // 
+            // mnuFileInsert
+            // 
+            this.mnuFileInsert.Name = "mnuFileInsert";
+            this.mnuFileInsert.Size = new System.Drawing.Size(232, 22);
+            this.mnuFileInsert.Text = "カーソル位置のファイルの前に追加";
+            this.mnuFileInsert.Click += new System.EventHandler(this.mnuFileInsert_Click);
+            // 
+            // mnuFileAdd
+            // 
+            this.mnuFileAdd.Name = "mnuFileAdd";
+            this.mnuFileAdd.Size = new System.Drawing.Size(232, 22);
+            this.mnuFileAdd.Text = "末尾に追加";
+            this.mnuFileAdd.Click += new System.EventHandler(this.mnuFileAdd_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(265, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(229, 6);
             // 
             // mnuFileGit
             // 
@@ -130,13 +151,13 @@
             this.mnuFileGitCommit,
             this.mnuFileGitHidtory});
             this.mnuFileGit.Name = "mnuFileGit";
-            this.mnuFileGit.Size = new System.Drawing.Size(268, 22);
+            this.mnuFileGit.Size = new System.Drawing.Size(232, 22);
             this.mnuFileGit.Text = "GIT連携(&G)";
             // 
             // mnuFileGitConfig
             // 
             this.mnuFileGitConfig.Name = "mnuFileGitConfig";
-            this.mnuFileGitConfig.Size = new System.Drawing.Size(256, 22);
+            this.mnuFileGitConfig.Size = new System.Drawing.Size(217, 22);
             this.mnuFileGitConfig.Text = "設定(&S)";
             this.mnuFileGitConfig.Click += new System.EventHandler(this.mnuFileGitConfig_Click);
             // 
@@ -145,14 +166,14 @@
             this.mnuFileGitCommit.Name = "mnuFileGitCommit";
             this.mnuFileGitCommit.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.C)));
-            this.mnuFileGitCommit.Size = new System.Drawing.Size(256, 22);
+            this.mnuFileGitCommit.Size = new System.Drawing.Size(217, 22);
             this.mnuFileGitCommit.Text = "保存してコミット";
             this.mnuFileGitCommit.Click += new System.EventHandler(this.mnuFileGitCommit_Click);
             // 
             // mnuFileGitHidtory
             // 
             this.mnuFileGitHidtory.Name = "mnuFileGitHidtory";
-            this.mnuFileGitHidtory.Size = new System.Drawing.Size(256, 22);
+            this.mnuFileGitHidtory.Size = new System.Drawing.Size(217, 22);
             this.mnuFileGitHidtory.Text = "履歴(&H)";
             this.mnuFileGitHidtory.Click += new System.EventHandler(this.mnuFileGitHidtory_Click);
             // 
@@ -161,13 +182,13 @@
             this.mnuSetting.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuSettingSetting});
             this.mnuSetting.Name = "mnuSetting";
-            this.mnuSetting.Size = new System.Drawing.Size(62, 22);
+            this.mnuSetting.Size = new System.Drawing.Size(57, 20);
             this.mnuSetting.Text = "設定(&S)";
             // 
             // mnuSettingSetting
             // 
             this.mnuSettingSetting.Name = "mnuSettingSetting";
-            this.mnuSettingSetting.Size = new System.Drawing.Size(118, 22);
+            this.mnuSettingSetting.Size = new System.Drawing.Size(112, 22);
             this.mnuSettingSetting.Text = "設定(&S)";
             this.mnuSettingSetting.Click += new System.EventHandler(this.mnuSettingSetting_Click);
             // 
@@ -175,7 +196,7 @@
             // 
             this.spLR.Dock = System.Windows.Forms.DockStyle.Fill;
             this.spLR.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
-            this.spLR.Location = new System.Drawing.Point(0, 26);
+            this.spLR.Location = new System.Drawing.Point(0, 24);
             this.spLR.Name = "spLR";
             // 
             // spLR.Panel1
@@ -185,7 +206,7 @@
             // spLR.Panel2
             // 
             this.spLR.Panel2.Controls.Add(this.azText);
-            this.spLR.Size = new System.Drawing.Size(700, 315);
+            this.spLR.Size = new System.Drawing.Size(700, 317);
             this.spLR.SplitterDistance = 191;
             this.spLR.TabIndex = 2;
             // 
@@ -194,7 +215,9 @@
             this.lvFiles.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.chFilename,
             this.chDirty,
-            this.chCount});
+            this.chCount,
+            this.chEncoding,
+            this.chActualFileSize});
             this.lvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvFiles.FullRowSelect = true;
             this.lvFiles.GridLines = true;
@@ -203,7 +226,7 @@
             this.lvFiles.Location = new System.Drawing.Point(0, 0);
             this.lvFiles.MultiSelect = false;
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(191, 315);
+            this.lvFiles.Size = new System.Drawing.Size(191, 317);
             this.lvFiles.TabIndex = 0;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -224,7 +247,7 @@
             // chCount
             // 
             this.chCount.Text = "count";
-            this.chCount.Width = 72;
+            this.chCount.Width = 53;
             // 
             // azText
             // 
@@ -240,17 +263,17 @@
             | Sgry.Azuki.DrawingOption.HighlightsMatchedBracket)));
             this.azText.FirstVisibleLine = 0;
             this.azText.Font = new System.Drawing.Font("MS UI Gothic", 9F);
-            fontInfo2.Name = "MS UI Gothic";
-            fontInfo2.Size = 9;
-            fontInfo2.Style = System.Drawing.FontStyle.Regular;
-            this.azText.FontInfo = fontInfo2;
+            fontInfo1.Name = "MS UI Gothic";
+            fontInfo1.Size = 9;
+            fontInfo1.Style = System.Drawing.FontStyle.Regular;
+            this.azText.FontInfo = fontInfo1;
             this.azText.ForeColor = System.Drawing.Color.Black;
             this.azText.GetSelectTextFilter = null;
             this.azText.Location = new System.Drawing.Point(0, 0);
             this.azText.Name = "azText";
             this.azText.ScrollPos = new System.Drawing.Point(0, 0);
             this.azText.ShowsHRuler = true;
-            this.azText.Size = new System.Drawing.Size(505, 315);
+            this.azText.Size = new System.Drawing.Size(505, 317);
             this.azText.TabIndex = 0;
             this.azText.ViewType = Sgry.Azuki.ViewType.WrappedProportional;
             this.azText.ViewWidth = 4129;
@@ -283,24 +306,13 @@
             this.lblStatus.Text = "lblStatus";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toolStripSeparator1
+            // chEncoding
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(265, 6);
+            this.chEncoding.Text = "encode";
             // 
-            // mnuFileAdd
+            // chActualFileSize
             // 
-            this.mnuFileAdd.Name = "mnuFileAdd";
-            this.mnuFileAdd.Size = new System.Drawing.Size(268, 22);
-            this.mnuFileAdd.Text = "末尾に追加";
-            this.mnuFileAdd.Click += new System.EventHandler(this.mnuFileAdd_Click);
-            // 
-            // mnuFileInsert
-            // 
-            this.mnuFileInsert.Name = "mnuFileInsert";
-            this.mnuFileInsert.Size = new System.Drawing.Size(268, 22);
-            this.mnuFileInsert.Text = "カーソル位置のファイルの前に追加";
-            this.mnuFileInsert.Click += new System.EventHandler(this.mnuFileInsert_Click);
+            this.chActualFileSize.Text = "FileSize";
             // 
             // ConEditorWindow
             // 
@@ -353,6 +365,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mnuFileInsert;
         private System.Windows.Forms.ToolStripMenuItem mnuFileAdd;
+        private System.Windows.Forms.ColumnHeader chEncoding;
+        private System.Windows.Forms.ColumnHeader chActualFileSize;
     }
 }
 
