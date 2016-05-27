@@ -134,6 +134,9 @@ namespace ConEditor
                 var item = new BinderContentListViewItem(content);
                 lvFiles.Items.Add(item);
             }
+
+            binder.EnableOutline = chkOutline.Checked;
+            lstOutline.DataSource = binder.Outline;
         }
 
         /// <summary>
@@ -474,6 +477,15 @@ namespace ConEditor
             if (confilmSaveOnExit() == false)
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void chkOutline_CheckedChanged(object sender, EventArgs e)
+        {
+            if (binder != null)
+            {
+                binder.EnableOutline = chkOutline.Checked;
+                lstOutline.DataSource = binder.Outline;
             }
         }
 

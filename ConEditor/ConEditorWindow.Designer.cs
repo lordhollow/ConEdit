@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Sgry.Azuki.FontInfo fontInfo1 = new Sgry.Azuki.FontInfo();
+            Sgry.Azuki.FontInfo fontInfo2 = new Sgry.Azuki.FontInfo();
             this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,17 +51,25 @@
             this.chFilename = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chDirty = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.chCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chEncoding = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.chActualFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.azText = new Sgry.Azuki.WinForms.AzukiControl();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblSelectionInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.chEncoding = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.chActualFileSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.tbExplorer = new System.Windows.Forms.TabControl();
+            this.tpContent = new System.Windows.Forms.TabPage();
+            this.tpOutline = new System.Windows.Forms.TabPage();
+            this.chkOutline = new System.Windows.Forms.CheckBox();
+            this.lstOutline = new System.Windows.Forms.ListBox();
             this.mnuStrip.SuspendLayout();
             this.spLR.Panel1.SuspendLayout();
             this.spLR.Panel2.SuspendLayout();
             this.spLR.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.tbExplorer.SuspendLayout();
+            this.tpContent.SuspendLayout();
+            this.tpOutline.SuspendLayout();
             this.SuspendLayout();
             // 
             // contextMenu
@@ -201,7 +209,7 @@
             // 
             // spLR.Panel1
             // 
-            this.spLR.Panel1.Controls.Add(this.lvFiles);
+            this.spLR.Panel1.Controls.Add(this.tbExplorer);
             // 
             // spLR.Panel2
             // 
@@ -223,10 +231,10 @@
             this.lvFiles.GridLines = true;
             this.lvFiles.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvFiles.HideSelection = false;
-            this.lvFiles.Location = new System.Drawing.Point(0, 0);
+            this.lvFiles.Location = new System.Drawing.Point(3, 3);
             this.lvFiles.MultiSelect = false;
             this.lvFiles.Name = "lvFiles";
-            this.lvFiles.Size = new System.Drawing.Size(191, 317);
+            this.lvFiles.Size = new System.Drawing.Size(177, 285);
             this.lvFiles.TabIndex = 0;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -249,6 +257,14 @@
             this.chCount.Text = "count";
             this.chCount.Width = 53;
             // 
+            // chEncoding
+            // 
+            this.chEncoding.Text = "encode";
+            // 
+            // chActualFileSize
+            // 
+            this.chActualFileSize.Text = "FileSize";
+            // 
             // azText
             // 
             this.azText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(250)))), ((int)(((byte)(240)))));
@@ -263,10 +279,10 @@
             | Sgry.Azuki.DrawingOption.HighlightsMatchedBracket)));
             this.azText.FirstVisibleLine = 0;
             this.azText.Font = new System.Drawing.Font("MS UI Gothic", 9F);
-            fontInfo1.Name = "MS UI Gothic";
-            fontInfo1.Size = 9;
-            fontInfo1.Style = System.Drawing.FontStyle.Regular;
-            this.azText.FontInfo = fontInfo1;
+            fontInfo2.Name = "MS UI Gothic";
+            fontInfo2.Size = 9;
+            fontInfo2.Style = System.Drawing.FontStyle.Regular;
+            this.azText.FontInfo = fontInfo2;
             this.azText.ForeColor = System.Drawing.Color.Black;
             this.azText.GetSelectTextFilter = null;
             this.azText.Location = new System.Drawing.Point(0, 0);
@@ -306,13 +322,61 @@
             this.lblStatus.Text = "lblStatus";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // chEncoding
+            // tbExplorer
             // 
-            this.chEncoding.Text = "encode";
+            this.tbExplorer.Controls.Add(this.tpContent);
+            this.tbExplorer.Controls.Add(this.tpOutline);
+            this.tbExplorer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tbExplorer.Location = new System.Drawing.Point(0, 0);
+            this.tbExplorer.Name = "tbExplorer";
+            this.tbExplorer.SelectedIndex = 0;
+            this.tbExplorer.Size = new System.Drawing.Size(191, 317);
+            this.tbExplorer.TabIndex = 1;
             // 
-            // chActualFileSize
+            // tpContent
             // 
-            this.chActualFileSize.Text = "FileSize";
+            this.tpContent.Controls.Add(this.lvFiles);
+            this.tpContent.Location = new System.Drawing.Point(4, 22);
+            this.tpContent.Name = "tpContent";
+            this.tpContent.Padding = new System.Windows.Forms.Padding(3);
+            this.tpContent.Size = new System.Drawing.Size(183, 291);
+            this.tpContent.TabIndex = 0;
+            this.tpContent.Text = "Content";
+            this.tpContent.UseVisualStyleBackColor = true;
+            // 
+            // tpOutline
+            // 
+            this.tpOutline.Controls.Add(this.lstOutline);
+            this.tpOutline.Controls.Add(this.chkOutline);
+            this.tpOutline.Location = new System.Drawing.Point(4, 22);
+            this.tpOutline.Name = "tpOutline";
+            this.tpOutline.Padding = new System.Windows.Forms.Padding(3);
+            this.tpOutline.Size = new System.Drawing.Size(183, 291);
+            this.tpOutline.TabIndex = 1;
+            this.tpOutline.Text = "Outline";
+            this.tpOutline.UseVisualStyleBackColor = true;
+            // 
+            // chkOutline
+            // 
+            this.chkOutline.AutoSize = true;
+            this.chkOutline.Dock = System.Windows.Forms.DockStyle.Top;
+            this.chkOutline.Location = new System.Drawing.Point(3, 3);
+            this.chkOutline.Name = "chkOutline";
+            this.chkOutline.Size = new System.Drawing.Size(177, 16);
+            this.chkOutline.TabIndex = 0;
+            this.chkOutline.Text = "アウトラインを有効にする";
+            this.chkOutline.UseVisualStyleBackColor = true;
+            this.chkOutline.CheckedChanged += new System.EventHandler(this.chkOutline_CheckedChanged);
+            // 
+            // lstOutline
+            // 
+            this.lstOutline.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstOutline.FormattingEnabled = true;
+            this.lstOutline.ItemHeight = 12;
+            this.lstOutline.Location = new System.Drawing.Point(3, 19);
+            this.lstOutline.Name = "lstOutline";
+            this.lstOutline.Size = new System.Drawing.Size(177, 269);
+            this.lstOutline.TabIndex = 1;
             // 
             // ConEditorWindow
             // 
@@ -333,6 +397,10 @@
             this.spLR.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.tbExplorer.ResumeLayout(false);
+            this.tpContent.ResumeLayout(false);
+            this.tpOutline.ResumeLayout(false);
+            this.tpOutline.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -367,6 +435,11 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileAdd;
         private System.Windows.Forms.ColumnHeader chEncoding;
         private System.Windows.Forms.ColumnHeader chActualFileSize;
+        private System.Windows.Forms.TabControl tbExplorer;
+        private System.Windows.Forms.TabPage tpContent;
+        private System.Windows.Forms.TabPage tpOutline;
+        private System.Windows.Forms.ListBox lstOutline;
+        private System.Windows.Forms.CheckBox chkOutline;
     }
 }
 
