@@ -23,6 +23,8 @@ namespace ConEditor
 
         BinderContentOrder binderOrder;
 
+        DocumentOutline outline;
+
         /// <summary>
         /// 改行コードカウント用のregex
         /// </summary>
@@ -122,6 +124,39 @@ namespace ConEditor
         /// ドキュメント
         /// </summary>
         public Document Document { get; private set; }
+
+        private bool enableOutline;
+        /// <summary>
+        /// アウトラインを有効にするか
+        /// </summary>
+        public bool EnableOutline
+        {
+            get { return enableOutline; }
+            set
+            {
+                if (enableOutline != value)
+                {
+                    enableOutline = value;
+                    if (value && Loaded)
+                    {   //アウトライン有効にするとき、読み込み済みなら再構築
+                        outline = new DocumentOutline();
+                        outline.Rebuild(this);
+                    }
+                    else
+                    {
+                        outline = null;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// アウトラインの取得
+        /// </summary>
+        public DocumentOutline Outline
+        {
+            get { return outline; }
+        }
 
         /// <summary>
         /// 内容物の数
@@ -258,6 +293,13 @@ namespace ConEditor
                 contents = binder;
                 binderOrder = sorter;
                 Loaded = true;
+
+                //アウトラインを作る
+                if (enableOutline)
+                {
+                    outline = new DocumentOutline();
+                    outline.Rebuild(this);
+                }
             }
             catch(Exception e)
             {
@@ -476,12 +518,41 @@ namespace ConEditor
                 }
             }
 
+            //アウトラインの更新
+            if (outline != null)
+            {
+                var contentHead = Document.GetLineHeadIndex(targetContent.LogicalStartLineInDocumnet);  //バインダを除くので-1しない
+                int contentBottom = GetContentBottomCaretInDocument(targetContent);
+                outline.Modify(this, contentHead, contentBottom, index, index + newText.Length, newText.Length - oldText.Length);
+            }
+
             //編集したコンテントのダーティーをON
             targetContent.Dirty = true;
             //編集されたよイベント
             InvokeContentModifiedEvent(targetContent.Index);
 
             return true;
+        }
+
+        /// <summary>
+        /// targetContentのケツがどこにあるか調べる
+        /// </summary>
+        /// <param name="targetContent"></param>
+        /// <returns></returns>
+        private int GetContentBottomCaretInDocument(BinderContent targetContent)
+        {
+            int contentBottom = 0;
+            if (targetContent.Index == contents.Count - 1)
+            {
+                //最後なら文末
+                contentBottom = Document.Length;
+            }
+            else
+            {
+                var trailContent = contents[targetContent.Index + 1];
+                contentBottom = Document.GetLineHeadIndex(trailContent.LogicalStartLineInDocumnet - 1) - 1;
+            }
+            return contentBottom;
         }
 
         /// <summary>
