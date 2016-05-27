@@ -26,10 +26,6 @@ namespace ConEditor
                 //開始順に並べ替える
                 comp.Sort((ca, cb) => ca.BeginAt - cb.BeginAt);
                 binder.Document.WatchPatterns.Register(new Sgry.Azuki.WatchPattern(AzukiMarkerForConEdit.ID_OUTLINE, Define.Pattern));
-                foreach (var component in comp)
-                {
-                    Console.WriteLine(component.ToString());
-                }
                 components = comp;
             }
             catch(Exception e)
