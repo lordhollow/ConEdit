@@ -10,6 +10,7 @@ namespace ConEditor
     {
         public const int ID_BindingBorder = 0;
         public const int ID_FindKeyword = 1;
+        public const int ID_OUTLINE = 2;
 
         /// <summary>
         /// テキストに持たせる意味の定義
@@ -20,6 +21,8 @@ namespace ConEditor
             Marking.Register(new Sgry.Azuki.MarkingInfo(ID_BindingBorder, "BinderBorder", MouseCursor.Arrow));
             // 検索結果
             Marking.Register(new Sgry.Azuki.MarkingInfo(ID_FindKeyword, "FindKeyword", MouseCursor.IBeam));
+            // アウトライン
+            Marking.Register(new Sgry.Azuki.MarkingInfo(ID_OUTLINE, "Outline", MouseCursor.IBeam));
         }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace ConEditor
                 var s = ColorScheme.Default;    //デフォルトを基準にして決める
                 s.SetMarkingDecoration(ID_BindingBorder, new BgColorTextDecoration(System.Drawing.Color.Gray));
                 s.SetMarkingDecoration(ID_FindKeyword, new BgColorTextDecoration(System.Drawing.Color.Yellow));
+                s.SetMarkingDecoration(ID_OUTLINE, new BgColorTextDecoration(System.Drawing.Color.Gray));
                 return s;
             }
         }
