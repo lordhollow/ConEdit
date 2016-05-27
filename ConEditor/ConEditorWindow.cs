@@ -137,6 +137,7 @@ namespace ConEditor
 
             binder.EnableOutline = chkOutline.Checked;
             lstOutline.DataSource = binder.Outline;
+            lstOutline.DisplayMember = "Text";
         }
 
         /// <summary>

@@ -58,6 +58,21 @@ namespace ConEditor
         /// </summary>
         public string Caption { get; set; }
         /// <summary>
+        /// レベル＋キャプション
+        /// </summary>
+        public string Text
+        {
+            get
+            {
+                string ret = "";
+                for (var i = 0; i < Level; i++)
+                {
+                    ret += "　";
+                }
+                return BeginAt.ToString() + ":"  + ret + Caption;
+            }
+        }
+        /// <summary>
         /// サブキャプション。任意。
         /// </summary>
         public string Subcaption { get; set; }

@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace ConEditor
 {
     /// <summary>
     /// アウトライン
     /// </summary>
-    public class DocumentOutline : System.ComponentModel.IBindingList
+    public class DocumentOutline : IBindingList
     {
         private List<OutlineComponent> components;
 
@@ -27,6 +28,8 @@ namespace ConEditor
                 comp.Sort((ca, cb) => ca.BeginAt - cb.BeginAt);
                 binder.Document.WatchPatterns.Register(new Sgry.Azuki.WatchPattern(AzukiMarkerForConEdit.ID_OUTLINE, Define.Pattern));
                 components = comp;
+
+                InvokeListChanged();
             }
             catch(Exception e)
             {
@@ -101,6 +104,16 @@ namespace ConEditor
             }
 
             components = newList;
+            InvokeListChanged();
+        }
+
+        private void InvokeListChanged()
+        {
+            if (ListChanged != null)
+            {
+                var eventArg = new ListChangedEventArgs(ListChangedType.Reset, -1);
+                ListChanged(this, eventArg);
+            }
         }
 
         public int Count
