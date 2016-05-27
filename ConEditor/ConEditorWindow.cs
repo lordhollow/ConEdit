@@ -463,14 +463,12 @@ namespace ConEditor
                 {
                     content = lvItem.Content;
                     var caretPos = azText.Document.GetCharIndexFromLineColumnIndex(content.LogicalStartLineInDocumnet, 0);
-                    azText.SetSelection(caretPos, caretPos);
-                    azText.ScrollToCaret();
+                    ScrollTo(caretPos, true);
                     return;
                 }
             }
             //選択なくなったら末尾へ
-            azText.SetSelection(azText.TextLength, azText.TextLength);
-            azText.ScrollToCaret();
+            ScrollTo(azText.TextLength, false);
         }
 
         private void ConEditorWindow_FormClosing(object sender, FormClosingEventArgs e)
@@ -490,8 +488,31 @@ namespace ConEditor
             }
         }
 
+
         #endregion
 
+        private void lstOutline_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (binder == null) return;
+            if(lstOutline.SelectedIndex>=0)
+            {
+                var item = lstOutline.SelectedItem as OutlineComponent;
+                if (item != null)
+                {
+                    ScrollTo(item.BeginAt, true);
+                }
+            }
+        }
 
+        private void ScrollTo(int caret, bool showInTop)
+        {
+            if (showInTop)
+            {
+                azText.SetSelection(azText.TextLength, azText.TextLength);
+                azText.ScrollToCaret();
+            }
+            azText.SetSelection(caret, caret);
+            azText.ScrollToCaret();
+        }
     }
 }
