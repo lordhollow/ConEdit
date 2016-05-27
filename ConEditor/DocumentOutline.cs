@@ -107,6 +107,19 @@ namespace ConEditor
             InvokeListChanged();
         }
 
+        public OutlineComponent GetComponentIndexFromCaret(int caret)
+        {
+            //TODO::そのうちBinarySearchにする
+            OutlineComponent comp = null;
+            foreach (var component in components)
+            {
+                if (component.BeginAt > caret) return comp;
+                comp = component;
+            }
+            return comp;
+
+        }
+
         private void InvokeListChanged()
         {
             if (ListChanged != null)

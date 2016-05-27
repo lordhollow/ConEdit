@@ -305,10 +305,27 @@ namespace ConEditor
             }
         }
 
+        void selectLstOutlineByCaret()
+        {
+            if (binder == null) return;
+            if (binder.Outline == null) return;
+            int b;
+            int e;
+            azText.GetSelection(out b, out e);
+            var oc = binder.Outline.GetComponentIndexFromCaret(b);
+            if (oc != null)
+            {
+                lvFilesSelfIndexSet = true;
+                lstOutline.SelectedItem = oc;
+                lvFilesSelfIndexSet = false;
+            }
+        }
+
+
 
         #endregion
 
-        #region Click Handler
+            #region Click Handler
 
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
@@ -405,9 +422,10 @@ namespace ConEditor
             lblSelectionInfo.Text = string.Format("[{0}-{1})", b, end);
 
             if (binder == null) return;
-            if (binder.Reconstructing == false)
+            if ((binder.Reconstructing == false) && (lvFilesSelfIndexSet == false))
             {
                 selectLvFilesByCaret();
+                selectLstOutlineByCaret();
             }
         }
 
@@ -494,7 +512,8 @@ namespace ConEditor
         private void lstOutline_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (binder == null) return;
-            if(lstOutline.SelectedIndex>=0)
+            if (lvFilesSelfIndexSet) return;
+            if (lstOutline.SelectedIndex >= 0)
             {
                 var item = lstOutline.SelectedItem as OutlineComponent;
                 if (item != null)
@@ -506,6 +525,7 @@ namespace ConEditor
 
         private void ScrollTo(int caret, bool showInTop)
         {
+            lvFilesSelfIndexSet = true;
             if (showInTop)
             {
                 azText.SetSelection(azText.TextLength, azText.TextLength);
@@ -513,6 +533,7 @@ namespace ConEditor
             }
             azText.SetSelection(caret, caret);
             azText.ScrollToCaret();
+            lvFilesSelfIndexSet = false;
         }
     }
 }
