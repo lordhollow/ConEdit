@@ -43,7 +43,7 @@ namespace ConEditor
             {
                 var o = new OutlineComponent();
                 o.Level = 1;
-                o.BeginAt = binder.Document.GetLineHeadIndex(content.LogicalStartLineInDocumnet);
+                o.BeginAt = binder.Document.GetLineHeadIndex(content.LogicalStartLineInDocumnet - 1);
                 o.Caption = content.FileNameBody;
                 o.Subcaption = "";
                 comp.Add(o);
@@ -57,9 +57,9 @@ namespace ConEditor
             {
                 var resultString = binder.Document.GetTextInRange(result.Begin, result.End);
                 var o = Define.TextToOutlineComponent(resultString);
-                if (o.IsCaptionOverwriteComponent)
+                if (!o.IsCaptionOverwriteComponent)
                 {
-                    o.Level = 0;
+                    o.Level++;
                 }
                 o.BeginAt = result.Begin;
                 comp.Add(o);
@@ -89,7 +89,7 @@ namespace ConEditor
                     //開始がcontentHeadの前のものはそのまま持っておく。
                     newList.Add(component);
                 }
-                else if (component.BeginAt > contentBottom)
+                else if (component.BeginAt >= contentBottom)
                 {
                     //開始がcontentBottomより後ろのものはmodifiedHeadを足して持っておく。
                     component.BeginAt += modifiedCount;

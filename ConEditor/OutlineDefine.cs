@@ -42,6 +42,8 @@ namespace ConEditor
     /// </remarks>
     public class OutlineComponent
     {
+        const string OutlineIndent = "　";
+
         /// <summary>
         /// このアウトラインの開始位置
         /// </summary>
@@ -64,12 +66,20 @@ namespace ConEditor
         {
             get
             {
-                string ret = "";
-                for (var i = 0; i < Level; i++)
+                if (IsCaptionOverwriteComponent)
                 {
-                    ret += "　";
+                    return string.Format("({0})", Caption);
                 }
-                return BeginAt.ToString() + ":"  + ret + Caption;
+                else
+                {
+                    string ret = "";
+                    for (var i = 1; i < Level; i++)
+                    {
+                        ret += OutlineIndent;
+                    }
+                    //return BeginAt.ToString() + ":" + ret + Caption;
+                    return ret + Caption;
+                }
             }
         }
         /// <summary>
@@ -97,7 +107,7 @@ namespace ConEditor
     /// </remarks>
     public class EmbeddedOutlineDefine : OutlineDefine
     {
-        private static readonly Regex ptn = new Regex(@"^(!|\*+)([^\s]+)(.*)$", RegexOptions.Multiline);
+        private static readonly Regex ptn = new Regex(@"^(!|\*+)(.+)$", RegexOptions.Multiline);
 
         public override Regex Pattern
         {
@@ -120,7 +130,7 @@ namespace ConEditor
                 ret.Level = g1.Length;
             }
             ret.Caption = m.Groups[2].Value;
-            ret.Subcaption = m.Groups[3].Value;
+            ret.Subcaption = "";// m.Groups[3].Value;
             ret.BeginAt = m.Index;
             return ret;
         }
