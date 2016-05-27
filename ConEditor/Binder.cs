@@ -385,6 +385,13 @@ namespace ConEditor
                 Document.Replace(fbody, insertCharet, insertCharet);
                 markBinderBorder(Document, newContent);
 
+                //アウトラインを作る
+                if (enableOutline)
+                {
+                    outline = new DocumentOutline();
+                    outline.Rebuild(this);
+                }
+
                 //イベント
                 newContent.Save();
                 binderOrder.Save();
