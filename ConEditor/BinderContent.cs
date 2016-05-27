@@ -68,7 +68,7 @@ namespace ConEditor
 
             try
             {
-                File.WriteAllText(Filename, Content);
+                File.WriteAllText(Filename, Content, Encoding);
                 Dirty = false;
                 return true;
             }
