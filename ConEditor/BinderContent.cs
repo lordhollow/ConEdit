@@ -57,7 +57,7 @@ namespace ConEditor
         /// <summary>
         /// ファイルサイズ（保存まで変わらない）
         /// </summary>
-        public int ActualFileSize { get; set; }
+        public long ActualFileSize { get; set; }
 
         /// <summary>
         /// 保存する
@@ -69,6 +69,8 @@ namespace ConEditor
             try
             {
                 File.WriteAllText(Filename, Content, Encoding);
+                var fi = new FileInfo(Filename);
+                ActualFileSize = fi.Length;
                 Dirty = false;
                 return true;
             }

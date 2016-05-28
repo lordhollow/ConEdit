@@ -91,7 +91,7 @@ namespace ConEditor
         /// </summary>
         /// <param name="size"></param>
         /// <returns></returns>
-        private string getSizeString(int size)
+        private string getSizeString(long size)
         {
             return size.ToString();
         }
