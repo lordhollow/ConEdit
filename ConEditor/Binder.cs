@@ -750,7 +750,7 @@ namespace ConEditor
             BinderContent bc = contents.First();
             foreach (var content in contents)
             {
-                if (content.LogicalStartLineInDocumnet >= docLogicalLineIndex)
+                if (content.LogicalStartLineInDocumnet > docLogicalLineIndex)
                 {
                     return bc;  //超える直前を返す
                 }
