@@ -16,6 +16,15 @@ namespace ConEditor
         {
             this.workspace = workspace;
             InitializeComponent();
+
+            ShowHistory();
+        }
+
+        private void ShowHistory()
+        {
+            lstHistory.Items.Clear();
+            var hist = GitTool.Instance.GetHistory(workspace);
+            lstHistory.Items.AddRange(hist.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

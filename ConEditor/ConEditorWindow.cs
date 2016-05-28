@@ -216,6 +216,7 @@ namespace ConEditor
         public void GitShowHistory()
         {
             if (binder == null) return;
+            GitTool.Instance.GitPath = config.GitPath;
             var f = new GitHistoryDialog(binder.Path);
             f.ShowDialog();
         }

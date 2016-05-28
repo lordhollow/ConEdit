@@ -131,6 +131,18 @@ namespace ConEditor
         }
 
         /// <summary>
+        /// 履歴の取得
+        /// </summary>
+        /// <param name="workspace"></param>
+        /// <returns></returns>
+        public string GetHistory(string workspace)
+        {
+            if (!Enable) return "";
+            return GitExecute(workspace, "log --oneline");
+        }
+
+
+        /// <summary>
         /// 設定を保存しておく
         /// </summary>
         public void Save()
