@@ -101,6 +101,12 @@
       <DependentUpon>GitInitDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="GitTool.cs" />
+    <Compile Include="GrepPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GrepPanel.designer.cs">
+      <DependentUpon>GrepPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="NewFileDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -126,6 +132,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GitInitDialog.resx">
       <DependentUpon>GitInitDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GrepPanel.resx">
+      <DependentUpon>GrepPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="NewFileDialog.resx">
       <DependentUpon>NewFileDialog.cs</DependentUpon>
