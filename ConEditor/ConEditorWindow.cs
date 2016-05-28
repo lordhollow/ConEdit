@@ -189,8 +189,8 @@ namespace ConEditor
         public void ShowGitConfigDialog()
         {
             if (binder == null) return;
+            GitTool.Instance.GitPath = config.GitPath;
             var f = new GitInitDialog(binder.Path);
-            f.GitPath = config.GitPath;
             f.ShowDialog();
             if (f.GitPath != config.GitPath)
             {

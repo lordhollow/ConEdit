@@ -41,13 +41,35 @@ namespace ConEditor
         /// </summary>
         public bool Enable
         {
-            get { return !string.IsNullOrEmpty(GitPath); }
+            get { return !string.IsNullOrEmpty(GitPath) && File.Exists(GitPath); }
         }
 
         /// <summary>
         /// 最後の実行結果
         /// </summary>
         public string LastExecuteResult { get; private set; }
+
+        /// <summary>
+        /// ユーザー名の取得
+        /// </summary>
+        /// <param name="workspace"></param>
+        /// <returns></returns>
+        public string GetUserName(string workspace)
+        {
+            if (!Enable) return "";
+            return GitExecute(workspace, "config --local --get user.name");
+        }
+
+        /// <summary>
+        /// ユーザーメールアドレスの取得の取得
+        /// </summary>
+        /// <param name="workspace"></param>
+        /// <returns></returns>
+        public string GetUserEMail(string workspace)
+        {
+            if (!Enable) return "";
+            return GitExecute(workspace, "config --local --get user.email");
+        }
 
         /// <summary>
         /// リポジトリの作成（ないとき）と、ユーザー名/メールアドレス/自動改行変換の設定
@@ -65,7 +87,8 @@ namespace ConEditor
             var ret = GitExecute(workspace, "config --local user.name \"" + name + "\"");
             ret += GitExecute(workspace, "config --local user.email \"" + mail + "\"");
             ret += GitExecute(workspace, "config --local core.autocrlf false");   //改行コード変換をなくす
-
+            ret += GitExecute(workspace, "config --local core.quotepath false");   //ファイル名の数値参照をなくす
+            
             LastExecuteResult = ret;
         }
 
@@ -74,20 +97,24 @@ namespace ConEditor
         /// </summary>
         /// <param name="workspace"></param>
         /// <returns></returns>
-        public bool IsNeedCommit(string workspace)
+        public bool IsNeedCommit(string workspace, out string targetFiles)
         {
-            return true;
+            targetFiles = "";
+            if (!Enable) return false;
+            var ret = GitExecute(workspace, "status -s .", out targetFiles);
+            return ((ret == 0) && (string.IsNullOrEmpty(targetFiles) == false));
         }
 
         /// <summary>
         /// とにかく全部コミットする
         /// </summary>
         /// <param name="workspace"></param>
-        public void Commit(string workspace, string message)
+        public string Commit(string workspace, string message)
         {
-            if (!Enable) return;
+            string output;
+            if (!Enable) return "gitが無効です";
             if (string.IsNullOrEmpty(message)) throw new GitCommitWithNoMessageException();
-            if (IsNeedCommit(workspace) == false) throw new GitCommitNoCommitableFileException();
+            if (IsNeedCommit(workspace, out output) == false) throw new GitCommitNoCommitableFileException();
 
             GitExecute(workspace, "add *");    //add all untracked file
             var lines = message.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
@@ -99,7 +126,8 @@ namespace ConEditor
                 eline = eline.Replace("\"", "\\\"");
                 m += "-m \"" + eline + "\" ";
             }
-            GitExecute(workspace, "commit " + m);
+            output = GitExecute(workspace, "commit " + m);
+            return output;
         }
 
         /// <summary>
@@ -111,6 +139,13 @@ namespace ConEditor
 
         private string GitExecute(string workspace, string cmd)
         {
+            string s;
+            GitExecute(workspace, cmd, out s);
+            return s;
+        }
+
+        private int GitExecute(string workspace, string cmd, out string stdOut)
+        {
             var ps = new ProcessStartInfo();
             ps.FileName = GitPath;
             ps.WorkingDirectory = workspace;
@@ -118,6 +153,7 @@ namespace ConEditor
             ps.UseShellExecute = false;
             ps.RedirectStandardOutput = true;
             ps.Arguments = cmd;
+            ps.StandardOutputEncoding = Encoding.UTF8;
 
             Process p = Process.Start(ps);
             p.WaitForExit();
@@ -128,8 +164,8 @@ namespace ConEditor
             {
                 GitExcuted(this, new GitExecutedEventArgs(px));
             }
-
-            return px;
+            stdOut = px;
+            return p.ExitCode;
         }
 
         public EventHandler<GitExecutedEventArgs> GitExcuted;

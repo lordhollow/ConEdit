@@ -26,10 +26,9 @@ namespace ConEditor
             InitializeComponent();
             this.workspace = workspace;
             lblGitPos.Text = GitTool.Instance.GitPath;
-            if (string.IsNullOrEmpty(GitTool.Instance.GitPath))
-            {
-                btnInit.Enabled = false;
-            }
+            txtName.Text = GitTool.Instance.GetUserName(workspace);
+            txtMail.Text = GitTool.Instance.GetUserEMail(workspace);
+            btnInit.Enabled = GitTool.Instance.Enable;
         }
 
         private void btnFindGit_Click(object sender, EventArgs e)
