@@ -301,6 +301,39 @@ namespace ConEditor
         }
 
         /// <summary>
+        /// コンテンツの再読出し
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="encode"></param>
+        /// <returns></returns>
+        public bool ReloadContent(BinderContent content, Encoding encode)
+        {
+            if (content == null) return false;
+            if (contents.Contains(content) == false) return false;
+            if (encode == null)
+            {
+                encode = Encoding.UTF8;
+            }
+            try
+            {
+                var fd = File.ReadAllBytes(content.Filename);
+                var fs = encode.GetString(fd);
+                content.Content = fs;
+                content.Encoding = encode;
+
+                var replaceBegin = Document.GetLineHeadIndex(content.LogicalStartLineInDocumnet);   //境界含まないので-1しない
+                var replaceEnd = GetContentBottomCaretInDocument(content);
+                Document.Replace(fs, replaceBegin, replaceEnd);
+            }
+            catch(Exception e)
+            {
+                Report.Export(e);
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// ファイル名newContentでbeforeThisの前に読み込み
         /// </summary>
         /// <param name="newContent"></param>
