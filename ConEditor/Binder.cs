@@ -572,7 +572,7 @@ namespace ConEditor
             else
             {
                 var trailContent = contents[targetContent.Index + 1];
-                contentBottom = Document.GetLineHeadIndex(trailContent.LogicalStartLineInDocumnet - 1) - Environment.NewLine.Length;
+                contentBottom = Document.GetLineHeadIndex(trailContent.LogicalStartLineInDocumnet - 1) - 2; //2は強制付与する\r\nの分。
             }
             return contentBottom;
         }
