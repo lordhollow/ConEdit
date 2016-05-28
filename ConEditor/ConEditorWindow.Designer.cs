@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             Sgry.Azuki.FontInfo fontInfo1 = new Sgry.Azuki.FontInfo();
-            this.contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmnuBinderContentList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -62,6 +62,9 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblSelectionInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.cmnuBinderReload = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderUTF8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderContentList.SuspendLayout();
             this.mnuStrip.SuspendLayout();
             this.spLR.Panel1.SuspendLayout();
             this.spLR.Panel2.SuspendLayout();
@@ -72,10 +75,14 @@
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
-            // contextMenu
+            // cmnuBinderContentList
             // 
-            this.contextMenu.Name = "contextMenu";
-            this.contextMenu.Size = new System.Drawing.Size(61, 4);
+            this.cmnuBinderContentList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmnuBinderReload,
+            this.cmnuBinderUTF8});
+            this.cmnuBinderContentList.Name = "contextMenu";
+            this.cmnuBinderContentList.Size = new System.Drawing.Size(203, 70);
+            this.cmnuBinderContentList.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuBinderContentList_Opening);
             // 
             // mnuStrip
             // 
@@ -196,7 +203,7 @@
             // mnuSettingSetting
             // 
             this.mnuSettingSetting.Name = "mnuSettingSetting";
-            this.mnuSettingSetting.Size = new System.Drawing.Size(112, 22);
+            this.mnuSettingSetting.Size = new System.Drawing.Size(152, 22);
             this.mnuSettingSetting.Text = "設定(&S)";
             this.mnuSettingSetting.Click += new System.EventHandler(this.mnuSettingSetting_Click);
             // 
@@ -248,6 +255,7 @@
             this.chCount,
             this.chEncoding,
             this.chActualFileSize});
+            this.lvFiles.ContextMenuStrip = this.cmnuBinderContentList;
             this.lvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvFiles.FullRowSelect = true;
             this.lvFiles.GridLines = true;
@@ -325,6 +333,7 @@
             // azText
             // 
             this.azText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(250)))), ((int)(((byte)(240)))));
+            this.azText.ContextMenuStrip = this.cmnuBinderContentList;
             this.azText.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.azText.Dock = System.Windows.Forms.DockStyle.Fill;
             this.azText.DrawingOption = ((Sgry.Azuki.DrawingOption)((((((((Sgry.Azuki.DrawingOption.DrawsFullWidthSpace | Sgry.Azuki.DrawingOption.DrawsTab) 
@@ -379,6 +388,19 @@
             this.lblStatus.Text = "lblStatus";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // cmnuBinderReload
+            // 
+            this.cmnuBinderReload.Name = "cmnuBinderReload";
+            this.cmnuBinderReload.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderReload.Text = "別のエンコードで開きなおす";
+            // 
+            // cmnuBinderUTF8
+            // 
+            this.cmnuBinderUTF8.Name = "cmnuBinderUTF8";
+            this.cmnuBinderUTF8.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderUTF8.Text = "UTF-8で保存するようにする";
+            this.cmnuBinderUTF8.Click += new System.EventHandler(this.cmnuBinderUTF8_Click);
+            // 
             // ConEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -391,6 +413,7 @@
             this.Name = "ConEditorWindow";
             this.Text = "こねでぃた";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ConEditorWindow_FormClosing);
+            this.cmnuBinderContentList.ResumeLayout(false);
             this.mnuStrip.ResumeLayout(false);
             this.mnuStrip.PerformLayout();
             this.spLR.Panel1.ResumeLayout(false);
@@ -409,7 +432,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ContextMenuStrip contextMenu;
+        private System.Windows.Forms.ContextMenuStrip cmnuBinderContentList;
         private System.Windows.Forms.MenuStrip mnuStrip;
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuFileOpen;
@@ -441,6 +464,8 @@
         private System.Windows.Forms.TabPage tpOutline;
         private System.Windows.Forms.ListBox lstOutline;
         private System.Windows.Forms.CheckBox chkOutline;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderReload;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderUTF8;
     }
 }
 

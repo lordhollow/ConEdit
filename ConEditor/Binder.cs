@@ -726,6 +726,20 @@ namespace ConEditor
         #region private method
 
         /// <summary>
+        /// 選択範囲（の左端）のコンテントを取得
+        /// </summary>
+        /// <returns></returns>
+        public BinderContent GetBinderContentFromSelectionLeft()
+        {
+            if (contents.Count == 0) return null;   //コンテンツがないときはダメだ
+            int b;
+            int e;
+            Document.GetSelection(out b, out e);
+            if (b > e) b = e;
+            return GetBinderContentFromCharet(b);
+        }
+
+        /// <summary>
         /// 指定論理行からバインダを選ぶ
         /// </summary>
         /// <param name="docLogicalLineIndex"></param>

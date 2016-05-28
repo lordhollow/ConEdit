@@ -564,5 +564,55 @@ namespace ConEditor
             }
 
         }
+
+
+        private void cmnuBinderContentList_Opening(object sender, CancelEventArgs e)
+        {
+            //エディタ部分とlvFilesが常に連動している前提があるのでそれが崩れないように注意！！
+            //バインダのどのコンテンツも選択されてなかったら表示しない
+            if ((binder == null) || (lvFiles.SelectedItems.Count == 0))
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            //初回のみ、別の文字コードで読み出すメニューの構築
+            if (cmnuBinderReload.DropDownItems.Count == 0)
+            {
+                foreach(var encoder in Encoding.GetEncodings())
+                {
+                    var item = cmnuBinderReload.DropDownItems.Add(encoder.Name, null, cmnuBinderReloadEncoding_click);
+                    item.Tag = encoder;
+                }
+            }
+
+            //コンテンツがすでにUTF-8ならUTF-8化を隠す
+            var targetContent = binder.GetBinderContentFromSelectionLeft();
+            cmnuBinderUTF8.Enabled = (targetContent != null) && (targetContent.Encoding != Encoding.UTF8);
+
+        }
+
+        private void cmnuBinderReloadEncoding_click(object sender, EventArgs args)
+        {
+            //指定エンコードで読み直し
+            var info = (sender as ToolStripItem).Tag as EncodingInfo;
+            if (info != null)
+            {
+                var targetContent = binder.GetBinderContentFromSelectionLeft();
+                binder.ReloadContent(targetContent, info.GetEncoding());
+
+            }
+        }
+
+        private void cmnuBinderUTF8_Click(object sender, EventArgs e)
+        {
+            //保存時の文字コードをUTF8にする
+            var targetContent = binder.GetBinderContentFromSelectionLeft();
+            if (targetContent != null)
+            {
+                targetContent.Encoding = Encoding.UTF8;
+                targetContent.Dirty = true;
+            }
+        }
     }
 }
