@@ -41,7 +41,11 @@ namespace ConEditor
                     handle.Free();
                 System.Runtime.InteropServices.Marshal.FinalReleaseComObject(lang);
             }
-
+            if (info.nCodePage == Encoding.ASCII.CodePage)
+            {
+                //ASCIIのときはUTF-8にする
+                return Encoding.UTF8;
+            }
             return Encoding.GetEncoding((int)info.nCodePage);
         }
     }
