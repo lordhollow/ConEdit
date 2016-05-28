@@ -18,6 +18,11 @@ namespace ConEditor
         Configulation config;
         ActualLineNumberConverterProvider actualNumberConverter = new ActualLineNumberConverterProvider();
 
+        /// <summary>
+        /// バインダがないとき無効になる項目のリスト
+        /// </summary>
+        List<object> needBinderItems;
+
         const string _dbg_file = @"";
 
         /// <summary>
@@ -31,6 +36,7 @@ namespace ConEditor
             {
                 _binder = value;
                 actualNumberConverter.Binder = binder;
+                UpdateActionEnable();
             }
         }
 
@@ -49,6 +55,15 @@ namespace ConEditor
         {
             InitializeComponent();
 
+            needBinderItems = new List<object>
+            {
+                mnuFileSave,
+                mnuFileSaveall,
+                mnuFileAdd,
+                mnuFileInsert,
+                mnuFileGit,
+            };
+            UpdateActionEnable();
             lblSelectionInfo.Text = "";
             lblStatus.Text = "";
 
@@ -536,6 +551,18 @@ namespace ConEditor
             azText.SetSelection(caret, caret);
             azText.ScrollToCaret();
             lvFilesSelfIndexSet = false;
+        }
+
+        private void UpdateActionEnable()
+        {
+            foreach (var component in needBinderItems)
+            {
+                if (component is ToolStripMenuItem)
+                {
+                    (component as ToolStripMenuItem).Enabled = (binder != null);
+                }
+            }
+
         }
     }
 }
