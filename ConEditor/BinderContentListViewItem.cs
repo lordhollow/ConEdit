@@ -51,18 +51,29 @@ namespace ConEditor
             SubItems[(int)ColumnIndex.FileName].Text = content.FileNameBody;
             SubItems[(int)ColumnIndex.Dirty].Text = getDirtyString(content.Dirty);
             SubItems[(int)ColumnIndex.Encoding].Text = content.Encoding.WebName;
-            SubItems[(int)ColumnIndex.ActualFileSize].Text = getSizeString(content.Content.Length);
+            SubItems[(int)ColumnIndex.ActualFileSize].Text = getSizeString(content.ActualFileSize);
             SubItems[(int)ColumnIndex.Size].Text = getSizeString(content.Content.Length);
 
         }
 
         /// <summary>
-        /// Dirtyが変わるときに変化するもの(DirtyとSize)を変化させる
+        /// Dirtyが変わるときに変化するもの(DirtyとSizeとファイルサイズ)を変化させる
         /// </summary>
         public void UpdateDirty()
         {
             SubItems[(int)ColumnIndex.Dirty].Text = getDirtyString(content.Dirty);
             SubItems[(int)ColumnIndex.Size].Text = getSizeString(content.Content.Length);
+            SubItems[(int)ColumnIndex.ActualFileSize].Text = getSizeString(content.ActualFileSize);
+        }
+
+        /// <summary>
+        /// Encodeが変わるときに変化するもの(DirtyとEncodeとSize)を変化させる
+        /// </summary>
+        public void UpdateEncode()
+        {
+            SubItems[(int)ColumnIndex.Dirty].Text = getDirtyString(content.Dirty);
+            SubItems[(int)ColumnIndex.Size].Text = getSizeString(content.Content.Length);
+            SubItems[(int)ColumnIndex.Encoding].Text = content.Encoding.WebName;
         }
 
         /// <summary>

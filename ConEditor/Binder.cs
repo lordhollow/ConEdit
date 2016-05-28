@@ -320,12 +320,12 @@ namespace ConEditor
                 var fs = encode.GetString(fd);
                 content.Content = fs;
                 content.Encoding = encode;
-
                 var replaceBegin = Document.GetLineHeadIndex(content.LogicalStartLineInDocumnet);   //境界含まないので-1しない
                 var replaceEnd = GetContentBottomCaretInDocument(content);
                 Document.Replace(fs, replaceBegin, replaceEnd);
+                content.Dirty = false;  //Replaceの後にしないとReplaceからのハンドラ処理で立ってしまう
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Report.Export(e);
                 return false;

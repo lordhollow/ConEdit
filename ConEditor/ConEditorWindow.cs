@@ -600,7 +600,7 @@ namespace ConEditor
             {
                 var targetContent = binder.GetBinderContentFromSelectionLeft();
                 binder.ReloadContent(targetContent, info.GetEncoding());
-
+                (lvFiles.SelectedItems[0] as BinderContentListViewItem).UpdateEncode();
             }
         }
 
@@ -612,6 +612,7 @@ namespace ConEditor
             {
                 targetContent.Encoding = Encoding.UTF8;
                 targetContent.Dirty = true;
+                (lvFiles.SelectedItems[0] as BinderContentListViewItem).UpdateEncode();
             }
         }
     }
