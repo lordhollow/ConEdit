@@ -261,25 +261,7 @@ namespace ConEditor
                     c.Content = fbody;
                     c.Dirty = false;
 
-                    //末尾に改行コードがないときは管理外で足しておく
-                    if (fbody.Length == 0)
-                    {
-                        fbody += "\r\n";
-                    }
-                    else
-                    {
-                        switch (fbody[fbody.Length - 1])
-                        {
-                            case '\r':  //これも一応見る
-                            case '\n':
-                                break;
-                            default:
-                                fbody += "\r\n";
-                                break;
-                        }
-                    }
-
-                    fbody = String.Format("《{0}》\r\n{1}", file, fbody);
+                    fbody = String.Format("《{0}》\r\n{1}\r\n", file, fbody);
                     doc.Replace(fbody, doc.Length, doc.Length);
                     c.Index = binder.Count;
                     binder.Add(c);
@@ -557,7 +539,7 @@ namespace ConEditor
             else
             {
                 var trailContent = contents[targetContent.Index + 1];
-                contentBottom = Document.GetLineHeadIndex(trailContent.LogicalStartLineInDocumnet - 1) - 1;
+                contentBottom = Document.GetLineHeadIndex(trailContent.LogicalStartLineInDocumnet - 1) - Environment.NewLine.Length;
             }
             return contentBottom;
         }
