@@ -205,6 +205,7 @@ namespace ConEditor
         public void GitCommit()
         {
             if (binder == null) return;
+            GitTool.Instance.GitPath = config.GitPath;
             var f = new GitCommitDialog(binder.Path);
             f.ShowDialog();
         }

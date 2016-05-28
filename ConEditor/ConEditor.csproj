@@ -118,6 +118,9 @@
     <EmbeddedResource Include="ConfigDialog.resx">
       <DependentUpon>ConfigDialog.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GitCommitDialog.resx">
+      <DependentUpon>GitCommitDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GitInitDialog.resx">
       <DependentUpon>GitInitDialog.cs</DependentUpon>
     </EmbeddedResource>
