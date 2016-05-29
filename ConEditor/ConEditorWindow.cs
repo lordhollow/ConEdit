@@ -28,7 +28,7 @@ namespace ConEditor
         /// </summary>
         GrepPanel grepPanel;
 
-        const string _dbg_file = @"C:\Users\Revol\Dropbox\執筆\voice";
+        const string _dbg_file = @"";
 
         /// <summary>
         /// バインダ（編集中のファイル群）
