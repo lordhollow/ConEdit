@@ -109,6 +109,7 @@
             this.cmbKeyWord.Size = new System.Drawing.Size(165, 20);
             this.cmbKeyWord.TabIndex = 2;
             this.cmbKeyWord.TextUpdate += new System.EventHandler(this.cmbKeyWord_TextUpdate);
+            this.cmbKeyWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbKeyWord_KeyDown);
             // 
             // btnExecute
             // 

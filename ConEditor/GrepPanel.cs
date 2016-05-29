@@ -197,6 +197,15 @@ namespace ConEditor
             SearchEngine.Keyword = cmbKeyWord.Text;
         }
 
+        private void cmbKeyWord_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                SearchEngine.Execute();
+            }
+
+        }
+
         #endregion
 
 
