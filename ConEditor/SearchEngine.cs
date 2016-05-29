@@ -82,7 +82,7 @@ namespace ConEditor
         /// </summary>
         public event EventHandler StatusChanged;
 
-            /// <summary>
+        /// <summary>
         /// ステータス
         /// </summary>
         public string Status
@@ -93,7 +93,7 @@ namespace ConEditor
                 if (status != value)
                 {
                     status = value;
-                    if(StatusChanged != null)
+                    if (StatusChanged != null)
                     {
                         StatusChanged(this, EventArgs.Empty);
                     }
