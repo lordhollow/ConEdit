@@ -16,7 +16,7 @@ namespace ConEditor
     /// エンジン1に対してフォームnを使いたい場合、
     /// Status以外のプロパティの変化でもPropertyChangedを発火させるべき。
     /// </remarks>
-    class SearchEngine : System.ComponentModel.INotifyPropertyChanged
+    public class SearchEngine : IDisposable
     {
         /// <summary>
         /// 検索結果の前後何文字を抽出するか
@@ -60,6 +60,14 @@ namespace ConEditor
         }
 
         /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            binder.Document.ContentChanged -= Document_ContentChanged;
+        }
+
+        /// <summary>
         /// 検索条件が変わったとき～
         /// </summary>
         public event EventHandler ConditionChanged;
@@ -70,6 +78,11 @@ namespace ConEditor
         public event EventHandler Executed;
 
         /// <summary>
+        /// ステータスが変わったとき
+        /// </summary>
+        public event EventHandler StatusChanged;
+
+            /// <summary>
         /// ステータス
         /// </summary>
         public string Status
@@ -80,7 +93,10 @@ namespace ConEditor
                 if (status != value)
                 {
                     status = value;
-                    InvokePropertyChangedEvent("Status");
+                    if(StatusChanged != null)
+                    {
+                        StatusChanged(this, EventArgs.Empty);
+                    }
                 }
             }
         }
@@ -88,17 +104,62 @@ namespace ConEditor
         /// <summary>
         /// 検索ターム
         /// </summary>
-        public string Keyword { get; set; }
+        public string Keyword
+        {
+            get { return keyword; }
+            set
+            {
+                if (keyword != value)
+                {
+                    keyword = value;
+                    NeedUpdate = true;
+                }
+            }
+        }
+        /// <summary>
+        /// 検索ターム
+        /// </summary>
+        private string keyword;
 
         /// <summary>
         /// 大小一致
         /// </summary>
-        public bool CaseSensitive { get; set; }
+        public bool CaseSensitive
+        {
+            get { return caseSensitive; }
+            set
+            {
+                if (caseSensitive == value)
+                {
+                    caseSensitive = value;
+                    NeedUpdate = true;
+                }
+            }
+        }
+        /// <summary>
+        /// 大小一致
+        /// </summary>
+        private bool caseSensitive;
 
         /// <summary>
         /// 正規表現
         /// </summary>
-        public bool UseRegExp { get; set; }
+        public bool UseRegExp
+        {
+            get { return useRegExp; }
+            set
+            {
+                if (useRegExp != value)
+                {
+                    useRegExp = value;
+                    NeedUpdate = true;
+                }
+            }
+        }
+        /// <summary>
+        /// 正規表現
+        /// </summary>
+        private bool useRegExp;
 
         /// <summary>
         /// documentに変更があったとき自動的に再検索するか
@@ -127,6 +188,25 @@ namespace ConEditor
         {
             get { return results; }
         }
+
+        /// <summary>
+        /// 結果の数
+        /// </summary>
+        public int ResultCount
+        {
+            get { return results.Count; }
+        }
+
+        /// <summary>
+        /// 結果参照
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public SearchEngineResult this[int index]
+        {
+            get { return results[index]; }
+        }
+
 
         /// <summary>
         /// 検索実行（前と同じ条件なら何もせず-1)
@@ -171,6 +251,7 @@ namespace ConEditor
                 try
                 {
                     Condition = new Regex(ptn, opt);
+                    Status = "";
                 }
                 catch
                 {
@@ -296,23 +377,6 @@ namespace ConEditor
                 Execute();
             }
         }
-
-        /// <summary>
-        /// 検索条件が変化したときに発火するイベント
-        /// </summary>
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        /// <summary>
-        /// PropertyChangedの踏み台
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected void InvokePropertyChangedEvent(string propertyName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
     }
 
     /// <summary>
@@ -356,5 +420,18 @@ namespace ConEditor
         {
             return MatchedText;
         }
+    }
+
+    /// <summary>
+    /// 検索結果から何か選んだ
+    /// </summary>
+    public class GrepResultSelectedEventArgs : EventArgs
+    {
+        public GrepResultSelectedEventArgs(SearchEngineResult result)
+        {
+            Result = result;
+        }
+
+        public SearchEngineResult Result { get; private set; }
     }
 }
