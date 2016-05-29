@@ -273,7 +273,8 @@ namespace ConEditor
                 grepPanel = gp;
                 gp.ResultSelectedChanged += (s, a) =>
                 {
-                    ScrollTo(a.Result.BeginCaret, true);
+                    azText.Document.SetSelection(a.Result.EndCaret, a.Result.BeginCaret);
+                    azText.ScrollToCaret();
                 };
                 gp.SearchEngine.ConditionChanged += (s, a) =>
                 {
