@@ -44,6 +44,11 @@ namespace ConEditor
         string status;
 
         /// <summary>
+        /// 置換モード
+        /// </summary>
+        bool replaceMode = false;
+
+        /// <summary>
         /// 検索結果抽出結果から空白で置換する文字
         /// </summary>
         static Regex ptnEscape = new Regex("\r|\n|\t");
@@ -231,6 +236,81 @@ namespace ConEditor
         }
 
         /// <summary>
+        /// 置換モード開始
+        /// </summary>
+        /// <remarks>
+        /// 置換モードはReplace/ReplaceAllが有効になり、ドキュメント更新時の再検索がなくなって検索結果位置の補正になる。
+        /// </remarks>
+        public void BeginReplace()
+        {
+            replaceMode = true;
+        }
+
+        /// <summary>
+        /// 置換モード終了
+        /// </summary>
+        public void EndReplace()
+        {
+            replaceMode = false;
+        }
+
+        /// <summary>
+        /// 全置換
+        /// </summary>
+        /// <param name="replaceTo"></param>
+        public void ReplaceAll(string replaceTo)
+        {
+            if (replaceMode == false) throw new InvalidOperationException();
+            foreach (var result in results)
+            {
+                Replace(result, replaceTo);
+            }
+        }
+
+        /// <summary>
+        /// 以降置換
+        /// </summary>
+        /// <param name="baseResult"></param>
+        /// <param name="replaceTo"></param>
+        public void ReplaceAllAfter(SearchEngineResult baseResult, string replaceTo)
+        {
+            if (replaceMode == false) throw new InvalidOperationException();
+            bool after = false;
+            foreach (var result in results)
+            {
+                if(baseResult == result)
+                {
+                    after = true;
+                }
+                if (after)
+                {
+                    Replace(result, replaceTo);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 一つ置換
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="replaceTo"></param>
+        public void Replace(SearchEngineResult result, string replaceTo)
+        {
+            if (replaceMode == false) throw new InvalidOperationException();
+            if (result == null) throw new ArgumentNullException();
+            if (result.Replaced) return;
+
+            if (useRegExp)
+            {
+                var txt = binder.Document.GetTextInRange(result.BeginCaret, result.EndCaret);
+                replaceTo = Condition.Replace(txt, replaceTo);
+            }
+            binder.Document.Replace(replaceTo, result.BeginCaret, result.EndCaret);
+            result.Replaced = true;
+        }
+
+        /// <summary>
         /// 検索を実行する...
         /// </summary>
         private void ApplyConditions()
@@ -372,7 +452,21 @@ namespace ConEditor
         void Document_ContentChanged(object sender, ContentChangedEventArgs e)
         {
             NeedUpdate = true;
-            if (ExecuteAtEdit)
+            if (replaceMode)
+            {
+                //編集個所より後ろに始まる検索結果の場所を補正する
+                var tail = e.Index + e.OldText.Length;
+                var mod = e.NewText.Length - e.OldText.Length;
+
+                foreach (var result in results)
+                {
+                    if (result.BeginCaret >= tail)
+                    {
+                        result.Modify(mod);
+                    }
+                }
+            }
+            else if (ExecuteAtEdit)
             {
                 Execute();
             }
@@ -403,6 +497,11 @@ namespace ConEditor
         public string MatchedText { get; private set; }
 
         /// <summary>
+        /// 置換したかどうか
+        /// </summary>
+        public bool Replaced { get; set; }
+
+        /// <summary>
         /// 検索適合テキストの開始位置
         /// </summary>
         public int BeginCaret { get; private set; }
@@ -411,6 +510,16 @@ namespace ConEditor
         /// 検索適合テキストの終了位置
         /// </summary>
         public int EndCaret { get; private set; }
+
+        /// <summary>
+        /// キャレットの補正
+        /// </summary>
+        /// <param name="mod"></param>
+        public void Modify(int mod)
+        {
+            BeginCaret += mod;
+            EndCaret += mod;
+        }
 
         /// <summary>
         /// 文字列化(検索適合テキストを返す）
