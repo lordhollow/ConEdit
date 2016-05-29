@@ -199,7 +199,14 @@ namespace ConEditor
         /// </summary>
         public int ResultCount
         {
-            get { return results.Count; }
+            get
+            {
+                if (Result == null)
+                {
+                    return 0;
+                }
+                return results.Count;
+            }
         }
 
         /// <summary>
