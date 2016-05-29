@@ -140,7 +140,40 @@ namespace ConEditor
             SearchEngine.IgnoreContainBorder = true;
         }
 
-        
+        /// <summary>
+        /// 選択されてるリストのところから置換開始。なければ最初から。
+        /// </summary>
+        public void ReplaceFromHear()
+        {
+            if (lstResult.Items.Count == 0) return;
+            if (lstResult.SelectedIndex >= 0)
+            {
+                ShowReplaceDialog(false, lstResult.SelectedItem as SearchEngineResult);
+            }
+            else
+            {
+                ReplaceFromFirst();
+            }
+        }
+
+        /// <summary>
+        /// 最初から置換開始
+        /// </summary>
+        public void ReplaceFromFirst()
+        {
+            if (lstResult.Items.Count == 0) return;
+            ShowReplaceDialog(false, lstResult.Items[0] as SearchEngineResult);
+        }
+
+        /// <summary>
+        /// 全部置換
+        /// </summary>
+        public void ReplaceAll()
+        {
+            if (lstResult.Items.Count == 0) return;
+            ShowReplaceDialog(true, lstResult.Items[0] as SearchEngineResult);
+        }
+
 
         #region EventHandler
         
@@ -204,6 +237,96 @@ namespace ConEditor
                 SearchEngine.Execute();
             }
 
+        }
+
+        private void cmnuResult_Opening(object sender, CancelEventArgs e)
+        {
+            //検索結果がないか、再建策が必要な時はメニューを出さない
+            e.Cancel = (lstResult.Items.Count == 0) | (SearchEngine.NeedUpdate);
+            //検索結果のどれも選択されてなければ、個別の置換を出さない
+            cmnuReplaceThis.Enabled = (lstResult.SelectedItems.Count != 0);
+        }
+
+        private void cmnuReplaceThis_Click(object sender, EventArgs e)
+        {
+            ReplaceFromHear();
+        }
+
+        private void cmnuReplaceAll_Click(object sender, EventArgs e)
+        {
+            ReplaceAll();
+        }
+
+        private void ShowReplaceDialog(bool replaceAll, SearchEngineResult resultBegin)
+        {
+            if (resultBegin == null) return;
+            SearchEngine.BeginReplace();
+            var dialog = new ReplaceKeywordInputDialog();
+            dialog.ReplaceFrom = resultBegin.MatchedText;
+            dialog.ReplaceAllMode = replaceAll;
+            dialog.StartPosition = FormStartPosition.CenterParent;
+            var replaced = false;
+            if (ResultSelectedChanged != null)
+            {
+                ResultSelectedChanged(this, new GrepResultSelectedEventArgs(resultBegin));
+            }
+            dialog.FormClosed += (s, a) =>
+            {
+                SearchEngine.EndReplace();
+                if (replaced)
+                {
+                    SearchEngine.Execute();
+                }
+            };
+            dialog.ReplaceRequired += (s, a) =>
+            {
+                if (a.ReplaceAll)
+                {
+                    //全部置換
+                    Console.WriteLine("replace all");
+                    SearchEngine.ReplaceAllAfter(resultBegin, a.ReplaceTo);
+                    dialog.Close();
+                    replaced = true;
+                }
+                else
+                {
+                    //一戸置換
+                    if (!a.Skip)
+                    {
+                        SearchEngine.Replace(resultBegin, a.ReplaceTo);
+                        replaced = true;
+                    }
+                    if (a.RequireContinue)
+                    {
+                        resultBegin = processNextReplace(resultBegin, dialog);
+                    }
+                    else
+                    {
+                        dialog.Close();
+                    }
+                }
+            };
+            dialog.ShowDialog();
+        }
+
+        private SearchEngineResult processNextReplace(SearchEngineResult resultBegin, ReplaceKeywordInputDialog dialog)
+        {
+            var nextIndex = lstResult.Items.IndexOf(resultBegin) + 1;
+            if (nextIndex < lstResult.Items.Count)
+            {
+                resultBegin = lstResult.Items[nextIndex] as SearchEngineResult;
+                dialog.ReplaceFrom = resultBegin.MatchedText;
+                if (ResultSelectedChanged != null)
+                {
+                    ResultSelectedChanged(this, new GrepResultSelectedEventArgs(resultBegin));
+                }
+            }
+            else
+            {
+                dialog.Close();
+            }
+
+            return resultBegin;
         }
 
         #endregion

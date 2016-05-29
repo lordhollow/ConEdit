@@ -37,11 +37,16 @@
             this.cmbKeyWord = new System.Windows.Forms.ComboBox();
             this.btnExecute = new System.Windows.Forms.Button();
             this.tmIncremental = new System.Windows.Forms.Timer(this.components);
+            this.cmnuResult = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmnuReplaceThis = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuReplaceAll = new System.Windows.Forms.ToolStripMenuItem();
             this.pControl.SuspendLayout();
+            this.cmnuResult.SuspendLayout();
             this.SuspendLayout();
             // 
             // lstResult
             // 
+            this.lstResult.ContextMenuStrip = this.cmnuResult;
             this.lstResult.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lstResult.FormattingEnabled = true;
             this.lstResult.IntegralHeight = false;
@@ -127,6 +132,32 @@
             this.tmIncremental.Interval = 500;
             this.tmIncremental.Tick += new System.EventHandler(this.tmIncremental_Tick);
             // 
+            // cmnuResult
+            // 
+            this.cmnuResult.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cmnuReplaceThis,
+            this.cmnuReplaceAll});
+            this.cmnuResult.Name = "cmnuResult";
+            this.cmnuResult.Size = new System.Drawing.Size(200, 70);
+            this.cmnuResult.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuResult_Opening);
+            // 
+            // cmnuReplaceThis
+            // 
+            this.cmnuReplaceThis.Name = "cmnuReplaceThis";
+            this.cmnuReplaceThis.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.cmnuReplaceThis.Size = new System.Drawing.Size(199, 22);
+            this.cmnuReplaceThis.Text = "これを置換";
+            this.cmnuReplaceThis.Click += new System.EventHandler(this.cmnuReplaceThis_Click);
+            // 
+            // cmnuReplaceAll
+            // 
+            this.cmnuReplaceAll.Name = "cmnuReplaceAll";
+            this.cmnuReplaceAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.G)));
+            this.cmnuReplaceAll.Size = new System.Drawing.Size(199, 22);
+            this.cmnuReplaceAll.Text = "すべて置換";
+            this.cmnuReplaceAll.Click += new System.EventHandler(this.cmnuReplaceAll_Click);
+            // 
             // GrepPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -137,6 +168,7 @@
             this.Size = new System.Drawing.Size(228, 214);
             this.pControl.ResumeLayout(false);
             this.pControl.PerformLayout();
+            this.cmnuResult.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -151,6 +183,8 @@
         private System.Windows.Forms.CheckBox chkRegExp;
         private System.Windows.Forms.CheckBox chkCaseSensitive;
         private System.Windows.Forms.Timer tmIncremental;
-
+        private System.Windows.Forms.ContextMenuStrip cmnuResult;
+        private System.Windows.Forms.ToolStripMenuItem cmnuReplaceThis;
+        private System.Windows.Forms.ToolStripMenuItem cmnuReplaceAll;
     }
 }
