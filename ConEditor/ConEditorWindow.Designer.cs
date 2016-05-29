@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Sgry.Azuki.FontInfo fontInfo2 = new Sgry.Azuki.FontInfo();
+            Sgry.Azuki.FontInfo fontInfo1 = new Sgry.Azuki.FontInfo();
             this.cmnuBinderContentList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmnuBinderReload = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuBinderUTF8 = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +78,10 @@
             this.mnuFindGoEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFindGoTopOfThis = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFindGoEndOfThis = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFindReplaceFirst = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindReplaceTrailing = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindReplaceAll = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuBinderContentList.SuspendLayout();
             this.mnuStrip.SuspendLayout();
             this.spLR.Panel1.SuspendLayout();
@@ -233,6 +237,10 @@
             this.mnuFindFirst,
             this.mnuFindLast,
             this.toolStripMenuItem3,
+            this.mnuFindReplaceFirst,
+            this.mnuFindReplaceTrailing,
+            this.mnuFindReplaceAll,
+            this.toolStripMenuItem4,
             this.mnuFindGoTopOfThis,
             this.mnuFindGoEndOfThis,
             this.mnuFineGoTop,
@@ -240,6 +248,7 @@
             this.mnuFind.Name = "mnuFind";
             this.mnuFind.Size = new System.Drawing.Size(57, 20);
             this.mnuFind.Text = "検索(&F)";
+            this.mnuFind.DropDownOpening += new System.EventHandler(this.mnuFind_DropDownOpening);
             // 
             // mnuFindFind
             // 
@@ -417,10 +426,10 @@
             | Sgry.Azuki.DrawingOption.HighlightsMatchedBracket)));
             this.azText.FirstVisibleLine = 0;
             this.azText.Font = new System.Drawing.Font("MS UI Gothic", 9F);
-            fontInfo2.Name = "MS UI Gothic";
-            fontInfo2.Size = 9;
-            fontInfo2.Style = System.Drawing.FontStyle.Regular;
-            this.azText.FontInfo = fontInfo2;
+            fontInfo1.Name = "MS UI Gothic";
+            fontInfo1.Size = 9;
+            fontInfo1.Style = System.Drawing.FontStyle.Regular;
+            this.azText.FontInfo = fontInfo1;
             this.azText.ForeColor = System.Drawing.Color.Black;
             this.azText.GetSelectTextFilter = null;
             this.azText.Location = new System.Drawing.Point(0, 0);
@@ -544,6 +553,37 @@
             this.mnuFindGoEndOfThis.Text = "この文書の末尾";
             this.mnuFindGoEndOfThis.Click += new System.EventHandler(this.mnuFindGoEndOfThis_Click);
             // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(264, 6);
+            // 
+            // mnuFindReplaceFirst
+            // 
+            this.mnuFindReplaceFirst.Name = "mnuFindReplaceFirst";
+            this.mnuFindReplaceFirst.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.H)));
+            this.mnuFindReplaceFirst.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindReplaceFirst.Text = "最初から置換";
+            this.mnuFindReplaceFirst.Click += new System.EventHandler(this.mnuFindReplaceFirst_Click);
+            // 
+            // mnuFindReplaceTrailing
+            // 
+            this.mnuFindReplaceTrailing.Name = "mnuFindReplaceTrailing";
+            this.mnuFindReplaceTrailing.ShortcutKeys = System.Windows.Forms.Keys.F4;
+            this.mnuFindReplaceTrailing.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindReplaceTrailing.Text = "以降を置換";
+            this.mnuFindReplaceTrailing.Click += new System.EventHandler(this.mnuFindReplaceTrailing_Click);
+            // 
+            // mnuFindReplaceAll
+            // 
+            this.mnuFindReplaceAll.Name = "mnuFindReplaceAll";
+            this.mnuFindReplaceAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.G)));
+            this.mnuFindReplaceAll.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindReplaceAll.Text = "すべて置換";
+            this.mnuFindReplaceAll.Click += new System.EventHandler(this.mnuFindReplaceAll_Click);
+            // 
             // ConEditorWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -625,6 +665,10 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFindGoEnd;
         private System.Windows.Forms.ToolStripMenuItem mnuFindGoTopOfThis;
         private System.Windows.Forms.ToolStripMenuItem mnuFindGoEndOfThis;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindReplaceFirst;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindReplaceTrailing;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindReplaceAll;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
     }
 }
 

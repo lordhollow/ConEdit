@@ -585,6 +585,21 @@ namespace ConEditor
             }
         }
 
+        private void mnuFindReplaceFirst_Click(object sender, EventArgs e)
+        {
+            if (grepPanel != null) grepPanel.ReplaceFromFirst();
+        }
+
+        private void mnuFindReplaceTrailing_Click(object sender, EventArgs e)
+        {
+            if (grepPanel != null) grepPanel.ReplaceFromHear();
+        }
+
+        private void mnuFindReplaceAll_Click(object sender, EventArgs e)
+        {
+            if (grepPanel != null) grepPanel.ReplaceAll();
+        }
+
         private void mnuFineGoTop_Click(object sender, EventArgs e)
         {
             ScrollTo(0, false);
@@ -781,6 +796,14 @@ namespace ConEditor
                 targetContent.Dirty = true;
                 (lvFiles.SelectedItems[0] as BinderContentListViewItem).UpdateEncode();
             }
+        }
+
+        private void mnuFind_DropDownOpening(object sender, EventArgs e)
+        {
+            var enable = (grepPanel != null) && (grepPanel.SearchEngine.ResultCount != 0);
+            mnuFindReplaceFirst.Enabled =
+                mnuFindReplaceTrailing.Enabled =
+                mnuFindReplaceAll.Enabled = enable;
         }
 
         #endregion
