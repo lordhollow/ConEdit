@@ -23,6 +23,11 @@ namespace ConEditor
         /// </summary>
         List<object> needBinderItems;
 
+        /// <summary>
+        /// 検索パネル（フォーカス置くための参照）
+        /// </summary>
+        GrepPanel grepPanel;
+
         const string _dbg_file = @"";
 
         /// <summary>
@@ -62,6 +67,7 @@ namespace ConEditor
                 mnuFileAdd,
                 mnuFileInsert,
                 mnuFileGit,
+                mnuFind,
             };
             UpdateActionEnable();
             lblSelectionInfo.Text = "";
@@ -112,6 +118,7 @@ namespace ConEditor
                 loadFolder = _dbg_file;
             }
 
+            EndFind();
             binder = Binder.CreateBinder(loadFolder);
             var result = binder.Load();
 
@@ -234,6 +241,77 @@ namespace ConEditor
             GitTool.Instance.GitPath = config.GitPath;
             var f = new GitHistoryDialog(binder.Path);
             f.ShowDialog();
+        }
+
+        /// <summary>
+        /// 検索ダイアログ広げる
+        /// </summary>
+        public void BeginFind()
+        {
+            if (binder == null) return;
+            if (grepPanel == null)
+            {
+                //中身の準備
+                spRLR.SuspendLayout();
+                //閉じるボタン
+                var btn = new Button();
+                btn.AutoSize = true;
+                btn.Text = ">>";
+                btn.Click += (s, a) => EndFind();
+                btn.Left = 0;
+                btn.Top = 0;
+
+                var p = new Panel();
+                p.Padding = new Padding(0, 0, 0, 0);
+                p.Margin = p.Padding;
+                p.Height = btn.Height;
+                p.Controls.Add(btn);
+                p.Dock = DockStyle.Top;
+
+                //検索パネル
+                var gp = new GrepPanel(binder);
+                grepPanel = gp;
+                gp.ResultSelectedChanged += (s, a) =>
+                {
+                    ScrollTo(a.Result.BeginCaret, true);
+                };
+                gp.SearchEngine.ConditionChanged += (s, a) =>
+                {
+                    azText.Document.WatchPatterns.Register(
+                        new WatchPattern(AzukiMarkerForConEdit.ID_FindKeyword,
+                        gp.SearchEngine.Condition));
+                    azText.Invalidate();
+                };
+                gp.SearchEngine.StatusChanged += (s, a) =>
+                {
+                    lblStatus.Text = gp.SearchEngine.Status;
+                };
+                gp.Dock = DockStyle.Fill;
+
+                spRLR.SplitterDistance = spRLR.Width - gp.Width;
+                spRLR.Panel2.Controls.Add(gp);
+                spRLR.Panel2.Controls.Add(p);
+
+                spRLR.ResumeLayout();
+            }
+            mnuFineClose.Enabled = true;
+            grepPanel.FocusKeyword();
+            spRLR.Panel2Collapsed = false;
+        }
+
+        /// <summary>
+        /// 検索ダイアログ畳む
+        /// </summary>
+        public void EndFind()
+        {
+            if (grepPanel!=null)
+            {
+                grepPanel.SearchEngine.Dispose();
+                grepPanel = null;
+            }
+            spRLR.Panel2.Controls.Clear();
+            spRLR.Panel2Collapsed = true;
+            mnuFineClose.Enabled = false;
         }
 
         /// <summary>
@@ -396,6 +474,15 @@ namespace ConEditor
             ShowNewContentDialog(null);
         }
 
+        private void mnuFindFind_Click(object sender, EventArgs e)
+        {
+            BeginFind();
+        }
+
+        private void mnuFineClose_Click(object sender, EventArgs e)
+        {
+            EndFind();
+        }
 
         #endregion
 
@@ -615,5 +702,6 @@ namespace ConEditor
                 (lvFiles.SelectedItems[0] as BinderContentListViewItem).UpdateEncode();
             }
         }
+
     }
 }

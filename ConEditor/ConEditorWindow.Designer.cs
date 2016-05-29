@@ -29,8 +29,10 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            Sgry.Azuki.FontInfo fontInfo1 = new Sgry.Azuki.FontInfo();
+            Sgry.Azuki.FontInfo fontInfo2 = new Sgry.Azuki.FontInfo();
             this.cmnuBinderContentList = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cmnuBinderReload = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderUTF8 = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -44,6 +46,8 @@
             this.mnuFileGitConfig = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileGitCommit = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileGitHidtory = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFind = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindFind = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSettingSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.spLR = new System.Windows.Forms.SplitContainer();
@@ -58,12 +62,12 @@
             this.tpOutline = new System.Windows.Forms.TabPage();
             this.lstOutline = new System.Windows.Forms.ListBox();
             this.chkOutline = new System.Windows.Forms.CheckBox();
+            this.spRLR = new System.Windows.Forms.SplitContainer();
             this.azText = new Sgry.Azuki.WinForms.AzukiControl();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblSelectionInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.cmnuBinderReload = new System.Windows.Forms.ToolStripMenuItem();
-            this.cmnuBinderUTF8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFineClose = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuBinderContentList.SuspendLayout();
             this.mnuStrip.SuspendLayout();
             this.spLR.Panel1.SuspendLayout();
@@ -72,6 +76,8 @@
             this.tbExplorer.SuspendLayout();
             this.tpContent.SuspendLayout();
             this.tpOutline.SuspendLayout();
+            this.spRLR.Panel1.SuspendLayout();
+            this.spRLR.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,13 +87,27 @@
             this.cmnuBinderReload,
             this.cmnuBinderUTF8});
             this.cmnuBinderContentList.Name = "contextMenu";
-            this.cmnuBinderContentList.Size = new System.Drawing.Size(203, 70);
+            this.cmnuBinderContentList.Size = new System.Drawing.Size(203, 48);
             this.cmnuBinderContentList.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuBinderContentList_Opening);
+            // 
+            // cmnuBinderReload
+            // 
+            this.cmnuBinderReload.Name = "cmnuBinderReload";
+            this.cmnuBinderReload.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderReload.Text = "別のエンコードで開きなおす";
+            // 
+            // cmnuBinderUTF8
+            // 
+            this.cmnuBinderUTF8.Name = "cmnuBinderUTF8";
+            this.cmnuBinderUTF8.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderUTF8.Text = "UTF-8で保存するようにする";
+            this.cmnuBinderUTF8.Click += new System.EventHandler(this.cmnuBinderUTF8_Click);
             // 
             // mnuStrip
             // 
             this.mnuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
+            this.mnuFind,
             this.mnuSetting});
             this.mnuStrip.Location = new System.Drawing.Point(0, 0);
             this.mnuStrip.Name = "mnuStrip";
@@ -192,6 +212,23 @@
             this.mnuFileGitHidtory.Text = "履歴(&H)";
             this.mnuFileGitHidtory.Click += new System.EventHandler(this.mnuFileGitHidtory_Click);
             // 
+            // mnuFind
+            // 
+            this.mnuFind.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFindFind,
+            this.mnuFineClose});
+            this.mnuFind.Name = "mnuFind";
+            this.mnuFind.Size = new System.Drawing.Size(57, 20);
+            this.mnuFind.Text = "検索(&F)";
+            // 
+            // mnuFindFind
+            // 
+            this.mnuFindFind.Name = "mnuFindFind";
+            this.mnuFindFind.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.mnuFindFind.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindFind.Text = "検索(&F)";
+            this.mnuFindFind.Click += new System.EventHandler(this.mnuFindFind_Click);
+            // 
             // mnuSetting
             // 
             this.mnuSetting.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -203,7 +240,7 @@
             // mnuSettingSetting
             // 
             this.mnuSettingSetting.Name = "mnuSettingSetting";
-            this.mnuSettingSetting.Size = new System.Drawing.Size(152, 22);
+            this.mnuSettingSetting.Size = new System.Drawing.Size(112, 22);
             this.mnuSettingSetting.Text = "設定(&S)";
             this.mnuSettingSetting.Click += new System.EventHandler(this.mnuSettingSetting_Click);
             // 
@@ -220,7 +257,7 @@
             // 
             // spLR.Panel2
             // 
-            this.spLR.Panel2.Controls.Add(this.azText);
+            this.spLR.Panel2.Controls.Add(this.spRLR);
             this.spLR.Size = new System.Drawing.Size(700, 317);
             this.spLR.SplitterDistance = 191;
             this.spLR.TabIndex = 2;
@@ -330,6 +367,21 @@
             this.chkOutline.UseVisualStyleBackColor = true;
             this.chkOutline.CheckedChanged += new System.EventHandler(this.chkOutline_CheckedChanged);
             // 
+            // spRLR
+            // 
+            this.spRLR.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.spRLR.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
+            this.spRLR.Location = new System.Drawing.Point(0, 0);
+            this.spRLR.Name = "spRLR";
+            // 
+            // spRLR.Panel1
+            // 
+            this.spRLR.Panel1.Controls.Add(this.azText);
+            this.spRLR.Panel2Collapsed = true;
+            this.spRLR.Size = new System.Drawing.Size(505, 317);
+            this.spRLR.SplitterDistance = 362;
+            this.spRLR.TabIndex = 1;
+            // 
             // azText
             // 
             this.azText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(250)))), ((int)(((byte)(240)))));
@@ -345,10 +397,10 @@
             | Sgry.Azuki.DrawingOption.HighlightsMatchedBracket)));
             this.azText.FirstVisibleLine = 0;
             this.azText.Font = new System.Drawing.Font("MS UI Gothic", 9F);
-            fontInfo1.Name = "MS UI Gothic";
-            fontInfo1.Size = 9;
-            fontInfo1.Style = System.Drawing.FontStyle.Regular;
-            this.azText.FontInfo = fontInfo1;
+            fontInfo2.Name = "MS UI Gothic";
+            fontInfo2.Size = 9;
+            fontInfo2.Style = System.Drawing.FontStyle.Regular;
+            this.azText.FontInfo = fontInfo2;
             this.azText.ForeColor = System.Drawing.Color.Black;
             this.azText.GetSelectTextFilter = null;
             this.azText.Location = new System.Drawing.Point(0, 0);
@@ -388,18 +440,15 @@
             this.lblStatus.Text = "lblStatus";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // cmnuBinderReload
+            // mnuFineClose
             // 
-            this.cmnuBinderReload.Name = "cmnuBinderReload";
-            this.cmnuBinderReload.Size = new System.Drawing.Size(202, 22);
-            this.cmnuBinderReload.Text = "別のエンコードで開きなおす";
-            // 
-            // cmnuBinderUTF8
-            // 
-            this.cmnuBinderUTF8.Name = "cmnuBinderUTF8";
-            this.cmnuBinderUTF8.Size = new System.Drawing.Size(202, 22);
-            this.cmnuBinderUTF8.Text = "UTF-8で保存するようにする";
-            this.cmnuBinderUTF8.Click += new System.EventHandler(this.cmnuBinderUTF8_Click);
+            this.mnuFineClose.Enabled = false;
+            this.mnuFineClose.Name = "mnuFineClose";
+            this.mnuFineClose.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.F)));
+            this.mnuFineClose.Size = new System.Drawing.Size(267, 22);
+            this.mnuFineClose.Text = "検索ダイアログを閉じる(&C)";
+            this.mnuFineClose.Click += new System.EventHandler(this.mnuFineClose_Click);
             // 
             // ConEditorWindow
             // 
@@ -423,6 +472,8 @@
             this.tpContent.ResumeLayout(false);
             this.tpOutline.ResumeLayout(false);
             this.tpOutline.PerformLayout();
+            this.spRLR.Panel1.ResumeLayout(false);
+            this.spRLR.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -466,6 +517,10 @@
         private System.Windows.Forms.CheckBox chkOutline;
         private System.Windows.Forms.ToolStripMenuItem cmnuBinderReload;
         private System.Windows.Forms.ToolStripMenuItem cmnuBinderUTF8;
+        private System.Windows.Forms.ToolStripMenuItem mnuFind;
+        private System.Windows.Forms.ToolStripMenuItem mnuFindFind;
+        private System.Windows.Forms.SplitContainer spRLR;
+        private System.Windows.Forms.ToolStripMenuItem mnuFineClose;
     }
 }
 
