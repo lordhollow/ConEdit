@@ -141,28 +141,34 @@ namespace ConEditor
         }
 
         /// <summary>
-        /// 選択されてるリストのところから置換開始。なければ最初から。
-        /// </summary>
-        public void ReplaceFromHear()
-        {
-            if (lstResult.Items.Count == 0) return;
-            if (lstResult.SelectedIndex >= 0)
-            {
-                ShowReplaceDialog(false, lstResult.SelectedItem as SearchEngineResult);
-            }
-            else
-            {
-                ReplaceFromFirst();
-            }
-        }
-
-        /// <summary>
         /// 最初から置換開始
         /// </summary>
         public void ReplaceFromFirst()
         {
-            if (lstResult.Items.Count == 0) return;
-            ShowReplaceDialog(false, lstResult.Items[0] as SearchEngineResult);
+            if (SearchEngine.ResultCount == 0) return;
+            ShowReplaceDialog(false, SearchEngine.Result.First());
+        }
+
+        /// <summary>
+        /// キャレットの後ろから返還
+        /// </summary>
+        public void ReplaceFromHear()
+        {
+            if (SearchEngine.ResultCount == 0) return;
+            var caret = binder.Document.CaretIndex;
+            foreach(var result in SearchEngine.Result)
+            {
+                if(result.BeginCaret < caret)
+                {
+                    //skip
+                }
+                else
+                {
+                    ShowReplaceDialog(false, result);
+                    break;
+                }
+
+            }
         }
 
         /// <summary>
