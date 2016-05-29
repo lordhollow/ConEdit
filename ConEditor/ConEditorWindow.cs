@@ -28,7 +28,7 @@ namespace ConEditor
         /// </summary>
         GrepPanel grepPanel;
 
-        const string _dbg_file = @"";
+        const string _dbg_file = @"C:\Users\Revol\Dropbox\執筆\voice";
 
         /// <summary>
         /// バインダ（編集中のファイル群）
@@ -295,8 +295,8 @@ namespace ConEditor
                 spRLR.ResumeLayout();
             }
             mnuFineClose.Enabled = true;
-            grepPanel.FocusKeyword();
             spRLR.Panel2Collapsed = false;
+            grepPanel.FocusKeyword();
         }
 
         /// <summary>
@@ -417,10 +417,77 @@ namespace ConEditor
         }
 
 
+        private void ScrollTo(int caret, bool showInTop)
+        {
+            lvFilesSelfIndexSet = true;
+            if (showInTop)
+            {
+                azText.SetSelection(azText.TextLength, azText.TextLength);
+                azText.ScrollToCaret();
+            }
+            azText.SetSelection(caret, caret);
+            azText.ScrollToCaret();
+            lvFilesSelfIndexSet = false;
+        }
+
+        private void UpdateActionEnable()
+        {
+            foreach (var component in needBinderItems)
+            {
+                if (component is ToolStripMenuItem)
+                {
+                    (component as ToolStripMenuItem).Enabled = (binder != null);
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 今選択されている文書の先頭へ
+        /// </summary>
+        private void ShowTopOfCurrentContent()
+        {
+            BinderContent content = null;
+            if ((lvFiles.SelectedIndices != null) && (lvFiles.SelectedIndices.Count != 0))
+            {
+                var lvItem = lvFiles.SelectedItems[0] as BinderContentListViewItem;
+                if (lvItem != null)
+                {
+                    content = lvItem.Content;
+                    var caretPos = azText.Document.GetCharIndexFromLineColumnIndex(content.LogicalStartLineInDocumnet, 0);
+                    ScrollTo(caretPos, true);
+                    return;
+                }
+            }
+            //選択なくなったら末尾へ
+            ScrollTo(azText.TextLength, false);
+        }
+
+        /// <summary>
+        /// 今選択されている文書の末尾へ
+        /// </summary>
+        private void ShowBottomOfCurrentContent()
+        {
+            BinderContent content = null;
+            if ((lvFiles.SelectedIndices != null) && (lvFiles.SelectedIndices.Count != 0))
+            {
+                var lvItem = lvFiles.SelectedItems[0] as BinderContentListViewItem;
+                if (lvItem != null)
+                {
+                    content = lvItem.Content;
+                    var caretPos = binder.GetContentBottomCaretInDocument(content);
+                    ScrollTo(caretPos, false);
+                    return;
+                }
+            }
+            //選択なくなったら末尾へ
+            ScrollTo(azText.TextLength, false);
+        }
+
 
         #endregion
 
-            #region Click Handler
+        #region Click Handler
 
         private void mnuFileOpen_Click(object sender, EventArgs e)
         {
@@ -482,6 +549,59 @@ namespace ConEditor
         private void mnuFineClose_Click(object sender, EventArgs e)
         {
             EndFind();
+        }
+
+        private void mnuFinedNext_Click(object sender, EventArgs e)
+        {
+            if (grepPanel != null)
+            {
+                grepPanel.SelectNext();
+            }
+        }
+
+        private void mnuFinePrev_Click(object sender, EventArgs e)
+        {
+            if (grepPanel != null)
+            {
+                grepPanel.SelectPrev();
+            }
+
+        }
+
+        private void mnuFindFirst_Click(object sender, EventArgs e)
+        {
+            if (grepPanel != null)
+            {
+                grepPanel.SelectFirst();
+            }
+        }
+
+        private void mnuFindLast_Click(object sender, EventArgs e)
+        {
+            if(grepPanel!=null)
+            {
+                grepPanel.SelectLast();
+            }
+        }
+
+        private void mnuFineGoTop_Click(object sender, EventArgs e)
+        {
+            ScrollTo(0, false);
+        }
+
+        private void mnuFindGoEnd_Click(object sender, EventArgs e)
+        {
+            ScrollTo(azText.Document.Length, false);
+        }
+
+        private void mnuFindGoTopOfThis_Click(object sender, EventArgs e)
+        {
+            ShowTopOfCurrentContent();
+        }
+
+        private void mnuFindGoEndOfThis_Click(object sender, EventArgs e)
+        {
+            ShowBottomOfCurrentContent();
         }
 
         #endregion
@@ -577,21 +697,9 @@ namespace ConEditor
             if (binder == null) return;
             if (lvFilesSelfIndexSet) return;
 
-            BinderContent content = null;
-            if ((lvFiles.SelectedIndices != null) && (lvFiles.SelectedIndices.Count != 0))
-            {
-                var lvItem = lvFiles.SelectedItems[0] as BinderContentListViewItem;
-                if (lvItem != null)
-                {
-                    content = lvItem.Content;
-                    var caretPos = azText.Document.GetCharIndexFromLineColumnIndex(content.LogicalStartLineInDocumnet, 0);
-                    ScrollTo(caretPos, true);
-                    return;
-                }
-            }
-            //選択なくなったら末尾へ
-            ScrollTo(azText.TextLength, false);
+            ShowTopOfCurrentContent();
         }
+
 
         private void ConEditorWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -610,9 +718,6 @@ namespace ConEditor
             }
         }
 
-
-        #endregion
-
         private void lstOutline_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (binder == null) return;
@@ -626,32 +731,6 @@ namespace ConEditor
                 }
             }
         }
-
-        private void ScrollTo(int caret, bool showInTop)
-        {
-            lvFilesSelfIndexSet = true;
-            if (showInTop)
-            {
-                azText.SetSelection(azText.TextLength, azText.TextLength);
-                azText.ScrollToCaret();
-            }
-            azText.SetSelection(caret, caret);
-            azText.ScrollToCaret();
-            lvFilesSelfIndexSet = false;
-        }
-
-        private void UpdateActionEnable()
-        {
-            foreach (var component in needBinderItems)
-            {
-                if (component is ToolStripMenuItem)
-                {
-                    (component as ToolStripMenuItem).Enabled = (binder != null);
-                }
-            }
-
-        }
-
 
         private void cmnuBinderContentList_Opening(object sender, CancelEventArgs e)
         {
@@ -703,5 +782,6 @@ namespace ConEditor
             }
         }
 
+        #endregion
     }
 }

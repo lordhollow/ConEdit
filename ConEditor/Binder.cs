@@ -561,7 +561,7 @@ namespace ConEditor
         /// </summary>
         /// <param name="targetContent"></param>
         /// <returns></returns>
-        private int GetContentBottomCaretInDocument(BinderContent targetContent)
+        public int GetContentBottomCaretInDocument(BinderContent targetContent)
         {
             int contentBottom = 0;
             if (targetContent.Index == contents.Count - 1)
