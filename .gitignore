@@ -1,0 +1,6 @@
+/Azuki/package/*.dll
+/Azuki/package/*.pdb
+bin
+obj
+*.suo
+*.user
