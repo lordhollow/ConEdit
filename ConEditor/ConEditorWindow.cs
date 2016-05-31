@@ -84,8 +84,6 @@ namespace ConEditor
             azText.ColorScheme = AzukiMarkerForConEdit.ColorScheme;
 
             //hook to document(binder.Loadで新しいドキュメントになるのでその時には再フックが必要
-            azText.Document.BeforeContentChange += doc_BeforeContentChange;
-            azText.Document.ContentChanged += doc_ContentChanged;
             azText.Document.SelectionChanged += doc_SelectionChanged;
         }
 
@@ -142,8 +140,6 @@ namespace ConEditor
 
             var doc = binder.Document;
             azText.Document = doc;
-            doc.BeforeContentChange += doc_BeforeContentChange;
-            doc.ContentChanged += doc_ContentChanged;
             doc.SelectionChanged += doc_SelectionChanged;
             binder.BinderModified += binder_BinderModified;
             binder.ContentModified += binder_ContentModified;
@@ -623,35 +619,6 @@ namespace ConEditor
         #endregion
 
         #region other handler
-
-        void doc_BeforeContentChange(object sender, Sgry.Azuki.BeforeContentChangeEventArgs e)
-        {
-            //編集時にバインド境界を無視するための処理
-            if (binder == null)
-            {
-                e.Cancel = true;
-                return;
-            }
-            if (binder.Reconstructing)
-            {
-                e.Cancel = false;
-                return;
-            }
-            if (binder.isTextIncludeBinderBorder(e.Index, e.OldText) == true)
-            {
-                e.Cancel = true;
-            }
-        }
-
-        void doc_ContentChanged(object sender, Sgry.Azuki.ContentChangedEventArgs e)
-        {
-            //編集内容をバインダに伝える
-            if (binder == null) return;
-            if (binder.Reconstructing == false)
-            {
-                binder.NotifyReplace(e.Index, e.OldText, e.NewText);
-            }
-        }
 
         void doc_SelectionChanged(object sender, Sgry.Azuki.SelectionChangedEventArgs e)
         {

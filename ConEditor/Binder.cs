@@ -271,6 +271,8 @@ namespace ConEditor
 
                 }
                 doc.ClearHistory();
+                doc.BeforeContentChange += Doc_BeforeContentChange;
+                doc.ContentChanged += Doc_ContentChanged;
                 Document = doc;
                 contents = binder;
                 binderOrder = sorter;
@@ -291,6 +293,29 @@ namespace ConEditor
                 return false;
             }
             return true;
+        }
+
+        void Doc_BeforeContentChange(object sender, Sgry.Azuki.BeforeContentChangeEventArgs e)
+        {
+            //編集時にバインド境界を無視するための処理
+            if (Reconstructing)
+            {
+                e.Cancel = false;
+                return;
+            }
+            if (isTextIncludeBinderBorder(e.Index, e.OldText) == true)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        void Doc_ContentChanged(object sender, Sgry.Azuki.ContentChangedEventArgs e)
+        {
+            //編集内容をバインダに伝える
+            if (Reconstructing == false)
+            {
+                NotifyReplace(e.Index, e.OldText, e.NewText);
+            }
         }
 
         private static void markBinderBorder(Sgry.Azuki.Document doc, BinderContent c)
@@ -500,7 +525,7 @@ namespace ConEditor
         /// <param name="index"></param>
         /// <param name="oldText"></param>
         /// <param name="newText"></param>
-        public bool NotifyReplace(int index, string oldText, string newText)
+        private bool NotifyReplace(int index, string oldText, string newText)
         {
             //境界を含む変更は許可しない
             //↓ここで見るとOutOfRangeが出るのでやめておく
