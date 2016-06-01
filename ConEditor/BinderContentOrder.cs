@@ -13,33 +13,29 @@ namespace ConEditor
     /// </summary>
     public class BinderContentOrder
     {
-        private Binder binder;
+        /// <summary>
+        /// 保存ファイル
+        /// </summary>
+        const string saveFile = "_oder.xml";
 
+        /// <summary>
+        /// 保存ファイルの中身
+        /// </summary>
         private List<string> orders;
 
-
-        private BinderContentOrder()
-        {
-            //テスト用
-        }
-
-        public BinderContentOrder(Binder binder)
-        {
-            this.binder = binder;
-            Load();
-        }
 
         /// <summary>
         /// filesを並び替える。
         /// </summary>
         /// <param name="files"></param>
         /// <returns></returns>
-        public string[] Sort(string[] files)
+        public void Sort(List<BinderContent> contents)
         {
             //orderの名簿にあるものを前から拾っていく
 
             //比較用に、filesを大文字にしたもの。
-            var filesUcase = files.Select(x => x.ToUpper()).ToArray();
+            //var filesUcase = files.Select(x => x.ToUpper()).ToArray();
+            var filesUcase = contents.Select(x => x.FileNameBody.ToUpper()).ToArray();
 
             //順番が規定されている分のリストを作る
             var fixedOrderdList = new List<int>();
@@ -60,7 +56,7 @@ namespace ConEditor
             }
 
             //残ったやつを後ろに並べる
-            if (fixedOrderdList.Count != files.Length)
+            if (fixedOrderdList.Count != contents.Count)
             {
                 int sortHead = fixedOrderdList.Count;
                 int sortCount=0;
@@ -75,8 +71,13 @@ namespace ConEditor
                 fixedOrderdList.Sort(sortHead, sortCount, new BinderContentComparer(filesUcase));
             }
 
-            //インデックスのリストを実体のリストに変換して連結して返す
-            return fixedOrderdList.Select(index => files[index]).ToArray();
+            //インデックス降り直し
+            for (var i=0; i<contents.Count; i++)
+            {
+                contents[fixedOrderdList[i]].Index = i;
+            }
+            //インデックスでソート
+            contents.Sort((c1, c2) => c1.Index - c2.Index);
         }
 
         class BinderContentComparer : IComparer<int>
@@ -150,18 +151,11 @@ namespace ConEditor
             }
         }
 
-        public string SaveFilePath
-        {
-            get
-            {
-                return Path.Combine(binder.Path, "order.xml");
-            }
-        }
-
-        public bool Load()
+        public bool Load(string BinderPath)
         {
             try
             {
+                var SaveFilePath = Path.Combine(BinderPath, saveFile);
                 if (File.Exists(SaveFilePath))
                 {
                     using (var f = new StreamReader(SaveFilePath))
@@ -182,11 +176,12 @@ namespace ConEditor
             return true;
         }
 
-        public bool Save()
+        public bool Save(Binder binder)
         {
             try
             {
-                if (createOrders() == false) return true;    //保存する必要がないので戻る
+                if (createOrders(binder) == false) return true;    //保存する必要がないので戻る
+                var SaveFilePath = Path.Combine(binder.Path, saveFile);
                 if ((orders == null) || (orders.Count == 0))
                 {
                     if (File.Exists(SaveFilePath))
@@ -211,7 +206,7 @@ namespace ConEditor
             return true; ;
         }
 
-        private bool createOrders()
+        private bool createOrders(Binder binder)
         {
             //今の並び
             var currentOrder = binder.Select(content => content.FileNameBody).ToList();
@@ -285,8 +280,8 @@ namespace ConEditor
                 "File_60.txt",
                 "File_60_1.txt",
             };
-
-            var sorted = t.Sort(origin);
+            var contents = origin.Select(x => new BinderContent { Filename = x }).ToList();
+            t.Sort(contents);
         }
 #endif
     }
