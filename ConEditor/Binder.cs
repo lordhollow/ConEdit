@@ -239,40 +239,21 @@ namespace ConEditor
             {
                 LoadConfigulation();
 
-                var files = Directory.GetFiles(Path, pattern);
-                var sorter = new BinderContentOrder(this);
-                var fileBodies = files.Select(x => System.IO.Path.GetFileName(x)).ToArray();
-                fileBodies = sorter.Sort(fileBodies);
-
+                //全ファイル読み出し
+                var binder = readAllFiles(pattern);
+                //ソート
+                var sorter = new BinderContentOrder();
+                sorter.Sort(binder);
+                //ドキュメント生成
                 var doc = new Document();
-                var binder = new List<BinderContent>();
+                rebuildDocument(binder, doc);
 
-                //全部のファイルを読んでつなぐ
-                foreach (var fileBody in fileBodies)
-                {
-                    var file = System.IO.Path.Combine(Path, fileBody);
-                    var c = new BinderContent();
-                    c.Filename = file;
-                    c.LogicalStartLineInDocumnet = doc.LineCount;
-                    var fdata = File.ReadAllBytes(file);
-                    c.Encoding = CodePageDetector.DetectEncoding(fdata);
-                    var fbody = c.Encoding.GetString(fdata);
-                    c.ActualFileSize = fdata.Length;
-                    c.Content = fbody;
-                    c.Dirty = false;
-
-                    fbody = String.Format("《{0}》\r\n{1}\r\n", file, fbody);
-                    doc.Replace(fbody, doc.Length, doc.Length);
-                    c.Index = binder.Count;
-                    binder.Add(c);
-
-                    //mark
-                    markBinderBorder(doc, c);
-
-                }
+                //ドキュメントに準備
                 doc.ClearHistory();
                 doc.BeforeContentChange += Doc_BeforeContentChange;
                 doc.ContentChanged += Doc_ContentChanged;
+
+                //フィールドに保存
                 Document = doc;
                 contents = binder;
                 binderOrder = sorter;
@@ -293,6 +274,46 @@ namespace ConEditor
                 return false;
             }
             return true;
+        }
+
+        private List<BinderContent> readAllFiles(string pattern)
+        {
+            var files = Directory.GetFiles(Path, pattern);
+            var binder = new List<BinderContent>();
+
+            //全部のファイルを読んでつなぐ
+            foreach (var file in files)
+            {
+                var c = new BinderContent();
+                c.Filename = file;
+                var fdata = File.ReadAllBytes(file);
+                c.Encoding = CodePageDetector.DetectEncoding(fdata);
+                var fbody = c.Encoding.GetString(fdata);
+                c.ActualFileSize = fdata.Length;
+                c.Content = fbody;
+                c.Dirty = false;
+                c.Index = binder.Count;
+                binder.Add(c);
+            }
+
+            return binder;
+        }
+
+        /// <summary>
+        /// ドキュメントの作り直し
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="doc"></param>
+        private void rebuildDocument(List<BinderContent> binder, Document doc)
+        {
+            doc.Replace("", 0, doc.Length);
+            foreach(var content in binder)
+            {
+                content.LogicalStartLineInDocumnet = doc.LineCount;
+                var fbody = String.Format("《{0}》\r\n{1}\r\n", content.Filename, content.Content);
+                doc.Replace(fbody, doc.Length, doc.Length);
+                markBinderBorder(doc, content);
+            }
         }
 
         void Doc_BeforeContentChange(object sender, Sgry.Azuki.BeforeContentChangeEventArgs e)
@@ -434,7 +455,7 @@ namespace ConEditor
 
                 //イベント
                 newContent.Save();
-                binderOrder.Save();
+                binderOrder.Save(this);
                 InvokeBinderModifiedEvent();
             }
             catch (Exception e)
