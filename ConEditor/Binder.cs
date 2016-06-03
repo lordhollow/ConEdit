@@ -310,8 +310,7 @@ namespace ConEditor
             foreach(var content in binder)
             {
                 content.LogicalStartLineInDocumnet = doc.LineCount;
-                var fbody = String.Format("《{0}》\r\n{1}\r\n", content.Filename, content.Content);
-                doc.Replace(fbody, doc.Length, doc.Length);
+                doc.Replace(content.TextForDocument, doc.Length, doc.Length);
                 markBinderBorder(doc, content);
             }
         }
@@ -442,8 +441,7 @@ namespace ConEditor
                     contents.Add(newContent);
                 }
                 //挿入(document)
-                var fbody = String.Format("《{0}》\r\n\r\n", newPath);
-                Document.Replace(fbody, insertCharet, insertCharet);
+                Document.Replace(newContent.TextForDocument, insertCharet, insertCharet);
                 markBinderBorder(Document, newContent);
 
                 //アウトラインを作る

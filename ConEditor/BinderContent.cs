@@ -93,6 +93,14 @@ namespace ConEditor
         }
 
         /// <summary>
+        /// エディタに登録するテキスト
+        /// </summary>
+        public string TextForDocument
+        {
+            get { return String.Format("《{0}》\r\n{1}\r\n", Filename, Content); }
+        }
+
+        /// <summary>
         /// documentの論理行をこのコンテントにおける行インデックスにする。バインダ位置が0、その次が1。
         /// </summary>
         /// <param name="logicalLine"></param>
