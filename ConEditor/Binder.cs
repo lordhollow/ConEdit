@@ -82,7 +82,6 @@ namespace ConEditor
         private Binder(string[] data)
         {
             var binder = new List<BinderContent>();
-            var doc = new Document();
             for (var i = 0; i < data.Length; i += 2)
             {
                 var file = data[i];
@@ -93,14 +92,12 @@ namespace ConEditor
                     Filename = file,
                     Index = binder.Count,
                     Content = content,
-                    LogicalStartLineInDocumnet = doc.LineCount,
                 };
-                var fbody = String.Format("《{0}》\r\n{1}", file, content);
-                doc.Replace(fbody, doc.Length, doc.Length);
                 binder.Add(c);
-                markBinderBorder(doc, c);
             }
-            doc.ClearHistory();
+
+            var doc = new Document();
+            rebuildDocument(binder, doc);
             doc.IsReadOnly = true;
             Document = doc;
             contents = binder;
@@ -249,7 +246,6 @@ namespace ConEditor
                 rebuildDocument(binder, doc);
 
                 //ドキュメントに準備
-                doc.ClearHistory();
                 doc.BeforeContentChange += Doc_BeforeContentChange;
                 doc.ContentChanged += Doc_ContentChanged;
 
@@ -306,6 +302,7 @@ namespace ConEditor
         /// <param name="doc"></param>
         private void rebuildDocument(List<BinderContent> binder, Document doc)
         {
+            Reconstructing = true;
             doc.Replace("", 0, doc.Length);
             foreach(var content in binder)
             {
@@ -313,6 +310,8 @@ namespace ConEditor
                 doc.Replace(content.TextForDocument, doc.Length, doc.Length);
                 markBinderBorder(doc, content);
             }
+            Reconstructing = false;
+            doc.ClearHistory();
         }
 
         void Doc_BeforeContentChange(object sender, Sgry.Azuki.BeforeContentChangeEventArgs e)
