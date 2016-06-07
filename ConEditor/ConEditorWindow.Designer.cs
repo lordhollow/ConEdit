@@ -33,6 +33,10 @@
             this.cmnuBinderContentList = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cmnuBinderReload = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuBinderUTF8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripSeparator();
+            this.cmnuBinderUp = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderDown = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderSort = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuStrip = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
@@ -48,6 +52,21 @@
             this.mnuFileGitHidtory = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFind = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFindFind = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFineClose = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFinedNext = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFinePrev = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindFirst = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindLast = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFindReplaceFirst = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindReplaceTrailing = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindReplaceAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFindGoTopOfThis = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindGoEndOfThis = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFineGoTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFindGoEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSettingSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.spLR = new System.Windows.Forms.SplitContainer();
@@ -67,21 +86,8 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.lblSelectionInfo = new System.Windows.Forms.ToolStripStatusLabel();
             this.lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
-            this.mnuFineClose = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFinedNext = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFinePrev = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindFirst = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindLast = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFineGoTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindGoEnd = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindGoTopOfThis = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindGoEndOfThis = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFindReplaceFirst = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindReplaceTrailing = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFindReplaceAll = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderToTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmnuBinderToBottom = new System.Windows.Forms.ToolStripMenuItem();
             this.cmnuBinderContentList.SuspendLayout();
             this.mnuStrip.SuspendLayout();
             this.spLR.Panel1.SuspendLayout();
@@ -99,9 +105,15 @@
             // 
             this.cmnuBinderContentList.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cmnuBinderReload,
-            this.cmnuBinderUTF8});
+            this.cmnuBinderUTF8,
+            this.toolStripMenuItem5,
+            this.cmnuBinderUp,
+            this.cmnuBinderDown,
+            this.cmnuBinderToTop,
+            this.cmnuBinderToBottom,
+            this.cmnuBinderSort});
             this.cmnuBinderContentList.Name = "contextMenu";
-            this.cmnuBinderContentList.Size = new System.Drawing.Size(203, 48);
+            this.cmnuBinderContentList.Size = new System.Drawing.Size(203, 186);
             this.cmnuBinderContentList.Opening += new System.ComponentModel.CancelEventHandler(this.cmnuBinderContentList_Opening);
             // 
             // cmnuBinderReload
@@ -116,6 +128,32 @@
             this.cmnuBinderUTF8.Size = new System.Drawing.Size(202, 22);
             this.cmnuBinderUTF8.Text = "UTF-8で保存するようにする";
             this.cmnuBinderUTF8.Click += new System.EventHandler(this.cmnuBinderUTF8_Click);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(199, 6);
+            // 
+            // cmnuBinderUp
+            // 
+            this.cmnuBinderUp.Name = "cmnuBinderUp";
+            this.cmnuBinderUp.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderUp.Text = "上げる";
+            this.cmnuBinderUp.Click += new System.EventHandler(this.cmnuBinderUp_Click);
+            // 
+            // cmnuBinderDown
+            // 
+            this.cmnuBinderDown.Name = "cmnuBinderDown";
+            this.cmnuBinderDown.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderDown.Text = "下げる";
+            this.cmnuBinderDown.Click += new System.EventHandler(this.cmnuBinderDown_Click);
+            // 
+            // cmnuBinderSort
+            // 
+            this.cmnuBinderSort.Name = "cmnuBinderSort";
+            this.cmnuBinderSort.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderSort.Text = "並び順をリセット";
+            this.cmnuBinderSort.Click += new System.EventHandler(this.cmnuBinderSort_Click);
             // 
             // mnuStrip
             // 
@@ -257,6 +295,121 @@
             this.mnuFindFind.Size = new System.Drawing.Size(267, 22);
             this.mnuFindFind.Text = "検索(&F)";
             this.mnuFindFind.Click += new System.EventHandler(this.mnuFindFind_Click);
+            // 
+            // mnuFineClose
+            // 
+            this.mnuFineClose.Enabled = false;
+            this.mnuFineClose.Name = "mnuFineClose";
+            this.mnuFineClose.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.F)));
+            this.mnuFineClose.Size = new System.Drawing.Size(267, 22);
+            this.mnuFineClose.Text = "検索ダイアログを閉じる(&C)";
+            this.mnuFineClose.Click += new System.EventHandler(this.mnuFineClose_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(264, 6);
+            // 
+            // mnuFinedNext
+            // 
+            this.mnuFinedNext.Name = "mnuFinedNext";
+            this.mnuFinedNext.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.mnuFinedNext.Size = new System.Drawing.Size(267, 22);
+            this.mnuFinedNext.Text = "次を検索";
+            this.mnuFinedNext.Click += new System.EventHandler(this.mnuFinedNext_Click);
+            // 
+            // mnuFinePrev
+            // 
+            this.mnuFinePrev.Name = "mnuFinePrev";
+            this.mnuFinePrev.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F3)));
+            this.mnuFinePrev.Size = new System.Drawing.Size(267, 22);
+            this.mnuFinePrev.Text = "前を検索";
+            this.mnuFinePrev.Click += new System.EventHandler(this.mnuFinePrev_Click);
+            // 
+            // mnuFindFirst
+            // 
+            this.mnuFindFirst.Name = "mnuFindFirst";
+            this.mnuFindFirst.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F3)));
+            this.mnuFindFirst.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindFirst.Text = "最初の検索結果";
+            this.mnuFindFirst.Click += new System.EventHandler(this.mnuFindFirst_Click);
+            // 
+            // mnuFindLast
+            // 
+            this.mnuFindLast.Name = "mnuFindLast";
+            this.mnuFindLast.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F3)));
+            this.mnuFindLast.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindLast.Text = "最後の検索結果";
+            this.mnuFindLast.Click += new System.EventHandler(this.mnuFindLast_Click);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(264, 6);
+            // 
+            // mnuFindReplaceFirst
+            // 
+            this.mnuFindReplaceFirst.Name = "mnuFindReplaceFirst";
+            this.mnuFindReplaceFirst.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.H)));
+            this.mnuFindReplaceFirst.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindReplaceFirst.Text = "最初から置換";
+            this.mnuFindReplaceFirst.Click += new System.EventHandler(this.mnuFindReplaceFirst_Click);
+            // 
+            // mnuFindReplaceTrailing
+            // 
+            this.mnuFindReplaceTrailing.Name = "mnuFindReplaceTrailing";
+            this.mnuFindReplaceTrailing.ShortcutKeys = System.Windows.Forms.Keys.F4;
+            this.mnuFindReplaceTrailing.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindReplaceTrailing.Text = "以降を置換";
+            this.mnuFindReplaceTrailing.Click += new System.EventHandler(this.mnuFindReplaceTrailing_Click);
+            // 
+            // mnuFindReplaceAll
+            // 
+            this.mnuFindReplaceAll.Name = "mnuFindReplaceAll";
+            this.mnuFindReplaceAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.G)));
+            this.mnuFindReplaceAll.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindReplaceAll.Text = "すべて置換";
+            this.mnuFindReplaceAll.Click += new System.EventHandler(this.mnuFindReplaceAll_Click);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(264, 6);
+            // 
+            // mnuFindGoTopOfThis
+            // 
+            this.mnuFindGoTopOfThis.Name = "mnuFindGoTopOfThis";
+            this.mnuFindGoTopOfThis.ShortcutKeys = System.Windows.Forms.Keys.F7;
+            this.mnuFindGoTopOfThis.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindGoTopOfThis.Text = "この文書の先頭";
+            this.mnuFindGoTopOfThis.Click += new System.EventHandler(this.mnuFindGoTopOfThis_Click);
+            // 
+            // mnuFindGoEndOfThis
+            // 
+            this.mnuFindGoEndOfThis.Name = "mnuFindGoEndOfThis";
+            this.mnuFindGoEndOfThis.ShortcutKeys = System.Windows.Forms.Keys.F8;
+            this.mnuFindGoEndOfThis.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindGoEndOfThis.Text = "この文書の末尾";
+            this.mnuFindGoEndOfThis.Click += new System.EventHandler(this.mnuFindGoEndOfThis_Click);
+            // 
+            // mnuFineGoTop
+            // 
+            this.mnuFineGoTop.Name = "mnuFineGoTop";
+            this.mnuFineGoTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F7)));
+            this.mnuFineGoTop.Size = new System.Drawing.Size(267, 22);
+            this.mnuFineGoTop.Text = "先頭";
+            this.mnuFineGoTop.Click += new System.EventHandler(this.mnuFineGoTop_Click);
+            // 
+            // mnuFindGoEnd
+            // 
+            this.mnuFindGoEnd.Name = "mnuFindGoEnd";
+            this.mnuFindGoEnd.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F8)));
+            this.mnuFindGoEnd.Size = new System.Drawing.Size(267, 22);
+            this.mnuFindGoEnd.Text = "末尾";
+            this.mnuFindGoEnd.Click += new System.EventHandler(this.mnuFindGoEnd_Click);
             // 
             // mnuSetting
             // 
@@ -469,120 +622,19 @@
             this.lblStatus.Text = "lblStatus";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // mnuFineClose
+            // cmnuBinderToTop
             // 
-            this.mnuFineClose.Enabled = false;
-            this.mnuFineClose.Name = "mnuFineClose";
-            this.mnuFineClose.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.F)));
-            this.mnuFineClose.Size = new System.Drawing.Size(267, 22);
-            this.mnuFineClose.Text = "検索ダイアログを閉じる(&C)";
-            this.mnuFineClose.Click += new System.EventHandler(this.mnuFineClose_Click);
+            this.cmnuBinderToTop.Name = "cmnuBinderToTop";
+            this.cmnuBinderToTop.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderToTop.Text = "一番上に";
+            this.cmnuBinderToTop.Click += new System.EventHandler(this.cmnuBinderToTop_Click);
             // 
-            // toolStripMenuItem2
+            // cmnuBinderToBottom
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(264, 6);
-            // 
-            // mnuFinedNext
-            // 
-            this.mnuFinedNext.Name = "mnuFinedNext";
-            this.mnuFinedNext.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.mnuFinedNext.Size = new System.Drawing.Size(267, 22);
-            this.mnuFinedNext.Text = "次を検索";
-            this.mnuFinedNext.Click += new System.EventHandler(this.mnuFinedNext_Click);
-            // 
-            // mnuFinePrev
-            // 
-            this.mnuFinePrev.Name = "mnuFinePrev";
-            this.mnuFinePrev.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F3)));
-            this.mnuFinePrev.Size = new System.Drawing.Size(267, 22);
-            this.mnuFinePrev.Text = "前を検索";
-            this.mnuFinePrev.Click += new System.EventHandler(this.mnuFinePrev_Click);
-            // 
-            // mnuFindFirst
-            // 
-            this.mnuFindFirst.Name = "mnuFindFirst";
-            this.mnuFindFirst.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F3)));
-            this.mnuFindFirst.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindFirst.Text = "最初の検索結果";
-            this.mnuFindFirst.Click += new System.EventHandler(this.mnuFindFirst_Click);
-            // 
-            // mnuFindLast
-            // 
-            this.mnuFindLast.Name = "mnuFindLast";
-            this.mnuFindLast.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F3)));
-            this.mnuFindLast.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindLast.Text = "最後の検索結果";
-            this.mnuFindLast.Click += new System.EventHandler(this.mnuFindLast_Click);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(264, 6);
-            // 
-            // mnuFineGoTop
-            // 
-            this.mnuFineGoTop.Name = "mnuFineGoTop";
-            this.mnuFineGoTop.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F7)));
-            this.mnuFineGoTop.Size = new System.Drawing.Size(267, 22);
-            this.mnuFineGoTop.Text = "先頭";
-            this.mnuFineGoTop.Click += new System.EventHandler(this.mnuFineGoTop_Click);
-            // 
-            // mnuFindGoEnd
-            // 
-            this.mnuFindGoEnd.Name = "mnuFindGoEnd";
-            this.mnuFindGoEnd.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.F8)));
-            this.mnuFindGoEnd.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindGoEnd.Text = "末尾";
-            this.mnuFindGoEnd.Click += new System.EventHandler(this.mnuFindGoEnd_Click);
-            // 
-            // mnuFindGoTopOfThis
-            // 
-            this.mnuFindGoTopOfThis.Name = "mnuFindGoTopOfThis";
-            this.mnuFindGoTopOfThis.ShortcutKeys = System.Windows.Forms.Keys.F7;
-            this.mnuFindGoTopOfThis.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindGoTopOfThis.Text = "この文書の先頭";
-            this.mnuFindGoTopOfThis.Click += new System.EventHandler(this.mnuFindGoTopOfThis_Click);
-            // 
-            // mnuFindGoEndOfThis
-            // 
-            this.mnuFindGoEndOfThis.Name = "mnuFindGoEndOfThis";
-            this.mnuFindGoEndOfThis.ShortcutKeys = System.Windows.Forms.Keys.F8;
-            this.mnuFindGoEndOfThis.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindGoEndOfThis.Text = "この文書の末尾";
-            this.mnuFindGoEndOfThis.Click += new System.EventHandler(this.mnuFindGoEndOfThis_Click);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(264, 6);
-            // 
-            // mnuFindReplaceFirst
-            // 
-            this.mnuFindReplaceFirst.Name = "mnuFindReplaceFirst";
-            this.mnuFindReplaceFirst.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.H)));
-            this.mnuFindReplaceFirst.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindReplaceFirst.Text = "最初から置換";
-            this.mnuFindReplaceFirst.Click += new System.EventHandler(this.mnuFindReplaceFirst_Click);
-            // 
-            // mnuFindReplaceTrailing
-            // 
-            this.mnuFindReplaceTrailing.Name = "mnuFindReplaceTrailing";
-            this.mnuFindReplaceTrailing.ShortcutKeys = System.Windows.Forms.Keys.F4;
-            this.mnuFindReplaceTrailing.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindReplaceTrailing.Text = "以降を置換";
-            this.mnuFindReplaceTrailing.Click += new System.EventHandler(this.mnuFindReplaceTrailing_Click);
-            // 
-            // mnuFindReplaceAll
-            // 
-            this.mnuFindReplaceAll.Name = "mnuFindReplaceAll";
-            this.mnuFindReplaceAll.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.G)));
-            this.mnuFindReplaceAll.Size = new System.Drawing.Size(267, 22);
-            this.mnuFindReplaceAll.Text = "すべて置換";
-            this.mnuFindReplaceAll.Click += new System.EventHandler(this.mnuFindReplaceAll_Click);
+            this.cmnuBinderToBottom.Name = "cmnuBinderToBottom";
+            this.cmnuBinderToBottom.Size = new System.Drawing.Size(202, 22);
+            this.cmnuBinderToBottom.Text = "一番下に";
+            this.cmnuBinderToBottom.Click += new System.EventHandler(this.cmnuBinderToBottom_Click);
             // 
             // ConEditorWindow
             // 
@@ -669,6 +721,12 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFindReplaceTrailing;
         private System.Windows.Forms.ToolStripMenuItem mnuFindReplaceAll;
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderUp;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderDown;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderSort;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderToTop;
+        private System.Windows.Forms.ToolStripMenuItem cmnuBinderToBottom;
     }
 }
 
