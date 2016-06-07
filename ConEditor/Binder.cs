@@ -240,6 +240,7 @@ namespace ConEditor
                 var binder = readAllFiles(pattern);
                 //ソート
                 var sorter = new BinderContentOrder();
+                sorter.Load(Path);
                 sorter.Sort(binder);
                 //ドキュメント生成
                 var doc = new Document();
@@ -440,6 +441,7 @@ namespace ConEditor
                 }
                 //挿入(document)
                 Document.Replace(newContent.TextForDocument, insertCharet, insertCharet);
+                Document.ClearHistory();
                 markBinderBorder(Document, newContent);
 
                 //アウトラインを作る

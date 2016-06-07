@@ -199,9 +199,8 @@ namespace ConEditor
         {
             try
             {
-                if (createOrders(binder) == false) return true;    //保存する必要がないので戻る
                 var SaveFilePath = Path.Combine(binder.Path, saveFile);
-                if ((orders == null) || (orders.Count == 0))
+                if (createOrders(binder) == false)
                 {
                     if (File.Exists(SaveFilePath))
                     {
