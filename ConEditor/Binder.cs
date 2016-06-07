@@ -41,6 +41,7 @@ namespace ConEditor
         {
             contents = new List<BinderContent>();
             binderConfig = new BinderConfigulation();
+            outline = new DocumentOutline();
         }
 
         /// <summary>
@@ -136,12 +137,11 @@ namespace ConEditor
                     enableOutline = value;
                     if (value && Loaded)
                     {   //アウトライン有効にするとき、読み込み済みなら再構築
-                        outline = new DocumentOutline();
                         outline.Rebuild(this);
                     }
                     else
                     {
-                        outline = null;
+                        outline.Clear();
                     }
                 }
             }
@@ -258,7 +258,6 @@ namespace ConEditor
                 //アウトラインを作る
                 if (enableOutline)
                 {
-                    outline = new DocumentOutline();
                     outline.Rebuild(this);
                 }
             }
@@ -446,7 +445,6 @@ namespace ConEditor
                 //アウトラインを作る
                 if (enableOutline)
                 {
-                    outline = new DocumentOutline();
                     outline.Rebuild(this);
                 }
 
@@ -527,6 +525,11 @@ namespace ConEditor
 
             //上に入れたほうはマーキングをやり直し
             markBinderBorder(Document, content);
+            //アウトラインを作る
+            if (enableOutline)
+            {
+                outline.Rebuild(this);
+            }
             //アンドゥはできないようにして
             Document.ClearHistory();
             //順番保存し
@@ -696,7 +699,7 @@ namespace ConEditor
             }
 
             //アウトラインの更新
-            if (outline != null)
+            if (enableOutline)
             {
                 var contentHead = Document.GetLineHeadIndex(targetContent.LogicalStartLineInDocumnet);  //バインダを除くので-1しない
                 int contentBottom = GetContentBottomCaretInDocument(targetContent);
