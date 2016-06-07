@@ -230,7 +230,8 @@ namespace ConEditor
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            components.Clear();
+            InvokeListChanged();
         }
 
         public bool Contains(object value)
