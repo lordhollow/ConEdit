@@ -151,6 +151,25 @@ namespace ConEditor
             }
         }
 
+        /// <summary>
+        /// 順番がいじられているか？
+        /// </summary>
+        public bool HasOrder
+        {
+            get
+            {
+                return ((orders != null) && (orders.Count != 0));
+            }
+        }
+        
+        /// <summary>
+        /// 順番リセット
+        /// </summary>
+        public void Clear()
+        {
+            orders = new List<string>();
+        }
+
         public bool Load(string BinderPath)
         {
             try

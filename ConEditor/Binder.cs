@@ -490,6 +490,118 @@ namespace ConEditor
             return newList;
         }
 
+        #region ReorderAPI
+
+        public void Up(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == 0) return;
+            //上下を入れ替えるのであれば、関係ないcontentには影響しない。
+
+            var uContent = contents[content.Index - 1];
+            var uTop = Document.GetLineHeadIndex(uContent.LogicalStartLineInDocumnet - 1);
+
+            var dTop = Document.GetLineHeadIndex(content.LogicalStartLineInDocumnet - 1);
+            var dBottom = GetContentBottomCaretInDocument(content);
+
+            Reconstructing = true;
+            {
+                //まず下側を取り除き
+                Document.Replace("", dTop, dBottom);
+                //上の上に入れる
+                var txt = content.TextForDocument;
+                Document.Replace(txt, uTop, uTop);
+                //下にあったものの開始行は上に移動し
+                content.LogicalStartLineInDocumnet = uContent.LogicalStartLineInDocumnet;
+                //上にあったものの開始行は下の行数分だけ下がる
+                uContent.LogicalStartLineInDocumnet += CountLine(txt);
+            }
+            Reconstructing = false;
+
+            //contentsは並び替えて
+            contents[--content.Index] = content;
+            contents[++uContent.Index] = uContent;
+
+            //上に入れたほうはマーキングをやり直し
+            markBinderBorder(Document, content);
+            //アンドゥはできないようにして
+            Document.ClearHistory();
+            //順番保存し
+            binderOrder.Save(this);
+            //変化を通知する
+            InvokeBinderModifiedEvent();
+        }
+
+        public void Down(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == contents.Count - 1) return;
+            //下のを上げれば上のを下げたことになる
+            Up(contents[content.Index + 1]);
+        }
+
+        public void ToTop(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == 0) return;
+            contents.Remove(content);
+            contents.Insert(0, content);
+            orderCheck();
+        }
+
+        public void ToBottom(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == contents.Count - 1) return;
+            contents.Remove(content);
+            contents.Add(content);
+            orderCheck();
+        }
+
+        public void OrderReset()
+        {
+            if (binderOrder.HasOrder)
+            {
+                binderOrder.Clear();
+                binderOrder.Sort(contents);
+                orderCheck();
+            }
+        }
+
+        private void orderCheck()
+        {
+            for (var i = 0; i < contents.Count; i++)
+            {
+                contents[i].Index = i;
+            }
+            rebuildDocument(contents, Document);
+            //アウトラインを作る
+            if (enableOutline)
+            {
+                outline.Rebuild(this);
+            }
+            //アンドゥはできないようにして
+            Document.ClearHistory();
+            //順番保存し
+            binderOrder.Save(this);
+            //変化を通知する
+            InvokeBinderModifiedEvent();
+        }
+
+        #endregion
+
         /// <summary>
         /// indexから始まるtextがバインダの境界を含むか確認する
         /// </summary>
