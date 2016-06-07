@@ -41,6 +41,7 @@ namespace ConEditor
         {
             contents = new List<BinderContent>();
             binderConfig = new BinderConfigulation();
+            outline = new DocumentOutline();
         }
 
         /// <summary>
@@ -82,7 +83,6 @@ namespace ConEditor
         private Binder(string[] data)
         {
             var binder = new List<BinderContent>();
-            var doc = new Document();
             for (var i = 0; i < data.Length; i += 2)
             {
                 var file = data[i];
@@ -93,14 +93,12 @@ namespace ConEditor
                     Filename = file,
                     Index = binder.Count,
                     Content = content,
-                    LogicalStartLineInDocumnet = doc.LineCount,
                 };
-                var fbody = String.Format("《{0}》\r\n{1}", file, content);
-                doc.Replace(fbody, doc.Length, doc.Length);
                 binder.Add(c);
-                markBinderBorder(doc, c);
             }
-            doc.ClearHistory();
+
+            var doc = new Document();
+            rebuildDocument(binder, doc);
             doc.IsReadOnly = true;
             Document = doc;
             contents = binder;
@@ -139,12 +137,11 @@ namespace ConEditor
                     enableOutline = value;
                     if (value && Loaded)
                     {   //アウトライン有効にするとき、読み込み済みなら再構築
-                        outline = new DocumentOutline();
                         outline.Rebuild(this);
                     }
                     else
                     {
-                        outline = null;
+                        outline.Clear();
                     }
                 }
             }
@@ -239,40 +236,20 @@ namespace ConEditor
             {
                 LoadConfigulation();
 
-                var files = Directory.GetFiles(Path, pattern);
-                var sorter = new BinderContentOrder(this);
-                var fileBodies = files.Select(x => System.IO.Path.GetFileName(x)).ToArray();
-                fileBodies = sorter.Sort(fileBodies);
-
+                //全ファイル読み出し
+                var binder = readAllFiles(pattern);
+                //ソート
+                var sorter = new BinderContentOrder();
+                sorter.Sort(binder);
+                //ドキュメント生成
                 var doc = new Document();
-                var binder = new List<BinderContent>();
+                rebuildDocument(binder, doc);
 
-                //全部のファイルを読んでつなぐ
-                foreach (var fileBody in fileBodies)
-                {
-                    var file = System.IO.Path.Combine(Path, fileBody);
-                    var c = new BinderContent();
-                    c.Filename = file;
-                    c.LogicalStartLineInDocumnet = doc.LineCount;
-                    var fdata = File.ReadAllBytes(file);
-                    c.Encoding = CodePageDetector.DetectEncoding(fdata);
-                    var fbody = c.Encoding.GetString(fdata);
-                    c.ActualFileSize = fdata.Length;
-                    c.Content = fbody;
-                    c.Dirty = false;
-
-                    fbody = String.Format("《{0}》\r\n{1}\r\n", file, fbody);
-                    doc.Replace(fbody, doc.Length, doc.Length);
-                    c.Index = binder.Count;
-                    binder.Add(c);
-
-                    //mark
-                    markBinderBorder(doc, c);
-
-                }
-                doc.ClearHistory();
+                //ドキュメントに準備
                 doc.BeforeContentChange += Doc_BeforeContentChange;
                 doc.ContentChanged += Doc_ContentChanged;
+
+                //フィールドに保存
                 Document = doc;
                 contents = binder;
                 binderOrder = sorter;
@@ -281,7 +258,6 @@ namespace ConEditor
                 //アウトラインを作る
                 if (enableOutline)
                 {
-                    outline = new DocumentOutline();
                     outline.Rebuild(this);
                 }
             }
@@ -293,6 +269,48 @@ namespace ConEditor
                 return false;
             }
             return true;
+        }
+
+        private List<BinderContent> readAllFiles(string pattern)
+        {
+            var files = Directory.GetFiles(Path, pattern);
+            var binder = new List<BinderContent>();
+
+            //全部のファイルを読んでつなぐ
+            foreach (var file in files)
+            {
+                var c = new BinderContent();
+                c.Filename = file;
+                var fdata = File.ReadAllBytes(file);
+                c.Encoding = CodePageDetector.DetectEncoding(fdata);
+                var fbody = c.Encoding.GetString(fdata);
+                c.ActualFileSize = fdata.Length;
+                c.Content = fbody;
+                c.Dirty = false;
+                c.Index = binder.Count;
+                binder.Add(c);
+            }
+
+            return binder;
+        }
+
+        /// <summary>
+        /// ドキュメントの作り直し
+        /// </summary>
+        /// <param name="binder"></param>
+        /// <param name="doc"></param>
+        private void rebuildDocument(List<BinderContent> binder, Document doc)
+        {
+            Reconstructing = true;
+            doc.Replace("", 0, doc.Length);
+            foreach(var content in binder)
+            {
+                content.LogicalStartLineInDocumnet = doc.LineCount;
+                doc.Replace(content.TextForDocument, doc.Length, doc.Length);
+                markBinderBorder(doc, content);
+            }
+            Reconstructing = false;
+            doc.ClearHistory();
         }
 
         void Doc_BeforeContentChange(object sender, Sgry.Azuki.BeforeContentChangeEventArgs e)
@@ -421,20 +439,18 @@ namespace ConEditor
                     contents.Add(newContent);
                 }
                 //挿入(document)
-                var fbody = String.Format("《{0}》\r\n\r\n", newPath);
-                Document.Replace(fbody, insertCharet, insertCharet);
+                Document.Replace(newContent.TextForDocument, insertCharet, insertCharet);
                 markBinderBorder(Document, newContent);
 
                 //アウトラインを作る
                 if (enableOutline)
                 {
-                    outline = new DocumentOutline();
                     outline.Rebuild(this);
                 }
 
                 //イベント
                 newContent.Save();
-                binderOrder.Save();
+                binderOrder.Save(this);
                 InvokeBinderModifiedEvent();
             }
             catch (Exception e)
@@ -471,6 +487,123 @@ namespace ConEditor
             }
             return newList;
         }
+
+        #region ReorderAPI
+
+        public void Up(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == 0) return;
+            //上下を入れ替えるのであれば、関係ないcontentには影響しない。
+
+            var uContent = contents[content.Index - 1];
+            var uTop = Document.GetLineHeadIndex(uContent.LogicalStartLineInDocumnet - 1);
+
+            var dTop = Document.GetLineHeadIndex(content.LogicalStartLineInDocumnet - 1);
+            var dBottom = GetContentBottomCaretInDocument(content);
+
+            Reconstructing = true;
+            {
+                //まず下側を取り除き
+                Document.Replace("", dTop, dBottom);
+                //上の上に入れる
+                var txt = content.TextForDocument;
+                Document.Replace(txt, uTop, uTop);
+                //下にあったものの開始行は上に移動し
+                content.LogicalStartLineInDocumnet = uContent.LogicalStartLineInDocumnet;
+                //上にあったものの開始行は下の行数分だけ下がる
+                uContent.LogicalStartLineInDocumnet += CountLine(txt);
+            }
+            Reconstructing = false;
+
+            //contentsは並び替えて
+            contents[--content.Index] = content;
+            contents[++uContent.Index] = uContent;
+
+            //上に入れたほうはマーキングをやり直し
+            markBinderBorder(Document, content);
+            //アウトラインを作る
+            if (enableOutline)
+            {
+                outline.Rebuild(this);
+            }
+            //アンドゥはできないようにして
+            Document.ClearHistory();
+            //順番保存し
+            binderOrder.Save(this);
+            //変化を通知する
+            InvokeBinderModifiedEvent();
+        }
+
+        public void Down(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == contents.Count - 1) return;
+            //下のを上げれば上のを下げたことになる
+            Up(contents[content.Index + 1]);
+        }
+
+        public void ToTop(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == 0) return;
+            contents.Remove(content);
+            contents.Insert(0, content);
+            orderCheck();
+        }
+
+        public void ToBottom(BinderContent content)
+        {
+            if ((content == null) || (contents.Contains(content) == false))
+            {
+                throw new InvalidOperationException();
+            }
+            if (content.Index == contents.Count - 1) return;
+            contents.Remove(content);
+            contents.Add(content);
+            orderCheck();
+        }
+
+        public void OrderReset()
+        {
+            if (binderOrder.HasOrder)
+            {
+                binderOrder.Clear();
+                binderOrder.Sort(contents);
+                orderCheck();
+            }
+        }
+
+        private void orderCheck()
+        {
+            for (var i = 0; i < contents.Count; i++)
+            {
+                contents[i].Index = i;
+            }
+            rebuildDocument(contents, Document);
+            //アウトラインを作る
+            if (enableOutline)
+            {
+                outline.Rebuild(this);
+            }
+            //アンドゥはできないようにして
+            Document.ClearHistory();
+            //順番保存し
+            binderOrder.Save(this);
+            //変化を通知する
+            InvokeBinderModifiedEvent();
+        }
+
+        #endregion
 
         /// <summary>
         /// indexから始まるtextがバインダの境界を含むか確認する
@@ -566,7 +699,7 @@ namespace ConEditor
             }
 
             //アウトラインの更新
-            if (outline != null)
+            if (enableOutline)
             {
                 var contentHead = Document.GetLineHeadIndex(targetContent.LogicalStartLineInDocumnet);  //バインダを除くので-1しない
                 int contentBottom = GetContentBottomCaretInDocument(targetContent);

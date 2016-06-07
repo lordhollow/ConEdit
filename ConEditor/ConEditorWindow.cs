@@ -739,6 +739,12 @@ namespace ConEditor
             var targetContent = binder.GetBinderContentFromSelectionLeft();
             cmnuBinderUTF8.Enabled = (targetContent != null) && (targetContent.Encoding != Encoding.UTF8);
 
+            //一番上なら上を、一番下なら下を隠す
+            cmnuBinderUp.Enabled = targetContent.Index != 0;
+            cmnuBinderToTop.Enabled = targetContent.Index != 0;
+            cmnuBinderDown.Enabled = targetContent.Index != binder.Count - 1;
+            cmnuBinderToBottom.Enabled = targetContent.Index != binder.Count - 1;
+
         }
 
         private void cmnuBinderReloadEncoding_click(object sender, EventArgs args)
@@ -763,6 +769,49 @@ namespace ConEditor
                 targetContent.Dirty = true;
                 (lvFiles.SelectedItems[0] as BinderContentListViewItem).UpdateEncode();
             }
+        }
+
+        private void cmnuBinderUp_Click(object sender, EventArgs e)
+        {
+            var targetContent = binder.GetBinderContentFromSelectionLeft();
+            if (targetContent != null)
+            {
+                binder.Up(targetContent);
+            }
+        }
+
+        private void cmnuBinderDown_Click(object sender, EventArgs e)
+        {
+            var targetContent = binder.GetBinderContentFromSelectionLeft();
+            if (targetContent != null)
+            {
+                binder.Down(targetContent);
+            }
+        }
+
+        private void cmnuBinderToTop_Click(object sender, EventArgs e)
+        {
+            var targetContent = binder.GetBinderContentFromSelectionLeft();
+            if (targetContent != null)
+            {
+                binder.ToTop(targetContent);
+            }
+
+        }
+
+        private void cmnuBinderToBottom_Click(object sender, EventArgs e)
+        {
+            var targetContent = binder.GetBinderContentFromSelectionLeft();
+            if (targetContent != null)
+            {
+                binder.ToBottom(targetContent);
+            }
+
+        }
+
+        private void cmnuBinderSort_Click(object sender, EventArgs e)
+        {
+            binder.OrderReset();
         }
 
         private void mnuFind_DropDownOpening(object sender, EventArgs e)
